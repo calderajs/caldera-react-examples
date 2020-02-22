@@ -1,0 +1,28 @@
+{
+  "name": "caldera-examples",
+  "version": "0.0.1",
+  "description": "Example Caldera apps",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "start-forms": "node -r caldera build/forms",
+    "start-clack": "node -r caldera build/clack",
+    "start-notepad": "node -r caldera build/notepad",
+    "start-todo": "node -r caldera build/todo",
+    "start-database": "node -r caldera build/database"
+  },
+  "author": "Yunyu Lin",
+  "license": "MIT",
+  "dependencies": {
+    "caldera": "0.0.3",
+    "mongodb": "^3.5.3",
+    "randomcolor": "^0.5.4",
+    "simplytyped": "^3.2.3"
+  },
+  "devDependencies": {
+    "@types/node": "^13.7.4",
+    "@types/randomcolor": "^0.5.3",
+    "@types/react": "^16.9.22",
+    "typescript": "^3.8.2"
+  }
+}

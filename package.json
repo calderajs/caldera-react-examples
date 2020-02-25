@@ -15,6 +15,7 @@
   "author": "Yunyu Lin",
   "license": "MIT",
   "dependencies": {
+    "@types/mongodb": "^3.3.16",
     "caldera": "file:../caldera",
     "mongodb": "^3.5.3",
     "randomcolor": "^0.5.4",

@@ -1,15 +1,56 @@
 import { MongoClient } from "mongodb";
-import assert from "assert";
+import { Head, initCalderaServer, useSharedState, makeSharedResource } from "caldera";
+import React, { useState, useEffect } from "react";
 
-// Database Name
-const dbName = "myproject";
+const url = 'mongodb://localhost:27017/';
 
-// Use connect method to connect to the server
-MongoClient.connect(process.env.MONGO_URL, (err, client) => {
-  assert.equal(null, err);
-  console.log("Connected successfully to server");
+const client = new MongoClient(url);
+let col;
 
-  const db = client.db(dbName);
+const Card = ({ text }) => <div className="card">{text}</div>
 
-  client.close();
-});
+const cardResouce = makeSharedResource([])
+
+const Board = () => {
+  const [cards, setCards] = useSharedState(cardResouce)
+  const [draft, setDraft] = useState([])
+
+  const expire = (toRemove) => {
+    setCards((cards) => (cards.filter(c => c.text != toRemove)))
+    col.remove({ text: toRemove })
+  }
+
+  useEffect(() => {
+    if (!col) {
+      client.connect(() => {
+        col = client.db('board').collection('messages')
+      });
+    }
+    (async () => setCards((await ((await col.find({})).toArray())) || []))();
+  }, [])
+
+  return <>
+    <div>
+      {cards.map((c, i) => <Card text={c.text} />)}
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (draft === "") return;
+          setCards((cards) => [...cards, { text: draft }]);
+          setDraft("");
+          col.insertOne({ text: draft })
+          setTimeout(() => expire(draft), 2000)
+        }}
+      >
+        <input
+          className="newItemInput"
+          onChange={e => setDraft(e.target.value)}
+          value={draft}>
+        </input>
+        <button className="newItemButton" type="submit">➕</button>
+      </form>
+    </div ></>
+
+}
+
+initCalderaServer(<Board />);

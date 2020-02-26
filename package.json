@@ -16,7 +16,7 @@
   "license": "MIT",
   "dependencies": {
     "@types/mongodb": "^3.3.16",
-    "caldera": "file:../caldera",
+    "caldera": "0.0.1-beta",
     "mongodb": "^3.5.3",
     "randomcolor": "^0.5.4",
     "simplytyped": "^3.2.3"

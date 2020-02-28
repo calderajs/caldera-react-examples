@@ -1,5 +1,5 @@
 import {
-  initCalderaServer,
+  renderCalderaApp,
   useSharedReducer,
   makeSharedResource,
   Head
@@ -106,4 +106,4 @@ const ClackApp = () => {
   );
 };
 
-initCalderaServer(<ClackApp />);
+renderCalderaApp(<ClackApp />);

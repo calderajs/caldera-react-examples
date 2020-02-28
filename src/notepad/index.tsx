@@ -1,4 +1,4 @@
-import { initCalderaServer } from "caldera";
+import { renderCalderaApp } from "caldera";
 import React, { useState } from "react";
 import fs from "fs";
 
@@ -37,4 +37,4 @@ const App = () => {
   );
 };
 
-initCalderaServer(<App />);
+renderCalderaApp(<App />);

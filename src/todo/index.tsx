@@ -1,4 +1,4 @@
-import { initCalderaServer, Head } from "caldera";
+import { renderCalderaApp, Head } from "caldera";
 import React, { useState } from "react";
 import { Nominal } from "simplytyped";
 import style from "./style";
@@ -84,4 +84,4 @@ const TodoApp = () => {
   );
 };
 
-initCalderaServer(<TodoApp />);
+renderCalderaApp(<TodoApp />);

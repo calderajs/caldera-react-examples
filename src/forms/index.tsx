@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {
-  initCalderaServer,
+  renderCalderaApp,
   useSharedState,
   makeSharedResource,
   Head
@@ -160,4 +160,4 @@ const FormsApp = () => {
   );
 };
 
-initCalderaServer(<FormsApp />);
+renderCalderaApp(<FormsApp />);

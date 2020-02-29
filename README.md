@@ -22,6 +22,6 @@ Then, open [http://localhost:8080](http://localhost:8080) to see Caldera in acti
 
 ## Screenshots
 
-![Clack](https://github.com/calderajs/caldera-examples/screenshots/clack.png)             |  ![Forms](https://github.com/calderajs/caldera-examples/screenshots/forms.png)
+![Clack](https://github.com/calderajs/caldera-examples/blob/master/screenshots/clack.png)             |  ![Forms](https://github.com/calderajs/caldera-examples/blob/master/screenshots/forms.png)
 :-------------------------:|:-------------------------:
-![Notepad](https://github.com/calderajs/caldera-examples/screenshots/notepad.png)  |  ![Todo](https://github.com/calderajs/caldera-examples/screenshots/todo.png)
+![Notepad](https://github.com/calderajs/caldera-examples/blob/master/screenshots/notepad.png)  |  ![Todo](https://github.com/calderajs/caldera-examples/blob/master/screenshots/todo.png)

@@ -1,10 +1,10 @@
+import React, { useState, useMemo } from "react";
 import {
   renderCalderaApp,
   useSharedReducer,
   makeSharedResource,
   Head
 } from "caldera";
-import React, { useState, useMemo } from "react";
 import style from "./style";
 import MessageBox from "./MessageBox";
 import ChatChannel from "./ChatChannel";

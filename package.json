@@ -6,17 +6,17 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "watch": "tsc --watch",
-    "start-forms": "node -r caldera build/forms",
-    "start-clack": "node -r caldera build/clack",
-    "start-notepad": "node -r caldera build/notepad",
-    "start-todo": "node -r caldera build/todo",
-    "start-database": "node -r caldera build/database"
+    "start-forms": "node build/forms",
+    "start-clack": "node build/clack",
+    "start-notepad": "node build/notepad",
+    "start-todo": "node build/todo",
+    "start-database": "node build/database"
   },
   "author": "Yunyu Lin",
   "license": "MIT",
   "dependencies": {
     "@types/mongodb": "^3.3.16",
-    "caldera": "^0.0.2-beta",
+    "caldera": "0.0.3-2",
     "mongodb": "^3.5.3",
     "randomcolor": "^0.5.4",
     "simplytyped": "^3.2.3"

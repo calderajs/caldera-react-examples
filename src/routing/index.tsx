@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { renderCalderaApp, useLocation, useHistory } from "caldera";
+import { renderCalderaApp, useLocation, useHistory, Head } from "caldera";
 
 const App = () => {
   const location = useLocation();
@@ -8,6 +8,9 @@ const App = () => {
 
   return (
     <div>
+      <Head>
+        <title>{location.path}</title>
+      </Head>
       <h1>{location.path}</h1>
       <div>New path: /{path}</div>
 

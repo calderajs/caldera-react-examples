@@ -9,9 +9,11 @@ const App = () => {
   return (
     <div>
       <Head>
-        <title>{location.path}</title>
+        <title>{location.pathname}</title>
       </Head>
-      <h1>{location.path}</h1>
+      <h1>
+        {location.pathname} + {location.search}
+      </h1>
       <div>New path: /{path}</div>
 
       <input type="text" value={path} onChange={e => setPath(e.target.value)} />

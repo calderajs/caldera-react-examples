@@ -10,7 +10,8 @@
     "start-clack": "node build/clack",
     "start-notepad": "node build/notepad",
     "start-todo": "node build/todo",
-    "start-database": "node build/database"
+    "start-database": "node build/database",
+    "start-routing": "node build/routing"
   },
   "author": "Yunyu Lin",
   "license": "MIT",

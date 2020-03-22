@@ -24,7 +24,6 @@ const MessageBox = React.forwardRef(
         <input
           value={value}
           onChange={e => onChange(e.target.value)}
-          onKeyDown={e => console.log("keydown", e)}
           className="input"
         ></input>
         <button type="submit" className="sendButton">

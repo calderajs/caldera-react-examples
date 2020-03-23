@@ -50,18 +50,49 @@ const style = css`
   }
 
   .nav-search-wrapper {
-    padding: 0 4px;
+    padding: 0 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,.15);
     border-radius: 4px;
     /* border-style: solid; */
   }
 
   .nav-search::placeholder {
-  color: #888;
-  opacity: 1;
-  font-size: 16px;
-}
+    color: #888;
+    opacity: 1;
+    font-size: 16px;
+  }
 
+  .nav-account {
+    display: flex;
+    padding: 0 8px;
+
+  }
+
+  .nav-account-pic {
+    height: 42px;
+    width: 42px;
+    border-radius: 21px;
+    color: #FFF;
+    margin-right: 8px;
+    font-size: 24px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 42px;      
+  }
+
+  .nav-account-name-wrapper {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .nav-account-name {
+    font-weight: bold;
+  }
+
+  .nav-account-id {
+    color: #AAA;
+  }
 
 `;
 

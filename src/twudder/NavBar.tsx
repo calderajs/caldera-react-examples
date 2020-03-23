@@ -4,7 +4,9 @@ const NavBar = () => {
 
     return <div className="nav-outer">
         <div className="nav-title">🐄 = ❤️ ≠ 🍔</div>
-        <input className="nav-search"></input>
+        <div className="nav-search-wrapper">
+            <input placeholder="Type a @user or #tag, and press enter" className="nav-search"></input>
+        </div>
         <div className="nav-account">Rahul</div>
     </div >
 }

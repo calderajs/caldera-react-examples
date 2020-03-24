@@ -22,14 +22,29 @@ const NewMoo = () => {
                 <input type="button" className="moo-submit" value="Moo"></input>
             </div>
         </div>
-
-
     </MooBox >
 }
+
+const Moo = () => {
+    return <MooBox>
+        <div className="moo">
+            <div className="account">
+                <AccountPic color="red" text="R" />
+                <div className="account-name-wrapper">
+                    <div className="account-name">Rahul GS</div>
+                    <div className="account-id">@cho</div>
+                </div>
+            </div>
+
+        </div>
+    </MooBox>
+}
+
 const Feed = () => {
     return <div className="feed-outer">
         <div className="feed-inner">
             <NewMoo />
+            <Moo />
         </div>
     </div>
 }

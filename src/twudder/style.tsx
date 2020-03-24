@@ -30,10 +30,18 @@ const style = css`
     box-shadow: 0 0 4px rgba(0,0,0,.15);
   }
 
+  .nav-account-outer {
+    padding: 0 16px;
+  }
+
+  .moo {
+    min-height: 168px;
+  }
+
   .nav-title {
     font-size: 30px;
     font-weight: bold;
-    padding-left: 4px;
+    padding: 0 16px;
   }
 
   .nav-title {
@@ -62,9 +70,8 @@ const style = css`
     font-size: 16px;
   }
 
-  .nav-account {
+  .account {
     display: flex;
-    padding: 0 8px;
   }
 
   .account-pic {
@@ -79,17 +86,17 @@ const style = css`
     line-height: 42px;      
   }
 
-  .nav-account-name-wrapper {
+  .account-name-wrapper {
     display: flex;
     justify-content: center;
     flex-direction: column;
   }
 
-  .nav-account-name {
+  .account-name {
     font-weight: bold;
   }
 
-  .nav-account-id {
+  .account-id {
     color: #AAA;
   }
 

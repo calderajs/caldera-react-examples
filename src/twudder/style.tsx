@@ -42,7 +42,7 @@ const style = css`
     padding-left: 4px;
   }
 
-  .nav-search {
+  .moo-input {
     height: 42px;
     width: 400px;
     border:none;
@@ -65,7 +65,6 @@ const style = css`
   .nav-account {
     display: flex;
     padding: 0 8px;
-
   }
 
   .account-pic {
@@ -91,6 +90,69 @@ const style = css`
   }
 
   .nav-account-id {
+    color: #AAA;
+  }
+
+  .feed-outer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .feed-inner {
+    width: 514px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .moo-box {
+    box-shadow: 0 2px 4px rgba(0,0,0,.15);
+    border-radius: 4px;
+    background: #FFF;
+    padding: 24px;
+    margin: 16px 0;
+
+  
+  }
+
+  .new-moo-input-wrapper {
+    display: flex;
+  }
+
+  .new-moo-submit-wrapper {
+    display: flex;
+
+  }
+
+  .new-moo-wrapper {
+    justify-content: space-between;
+    display: flex;
+    flex-direction: column;
+    /* height: 100%; */
+    min-height: 169px;
+  }
+
+  .moo-submit {
+    border-radius: 4px;
+    background: #36A0EC;
+    color: #FFF;
+    padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0,0,0,.15);
+
+  }
+
+  .new-moo-submit-wrapper {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .new-moo-char-count {
     color: #AAA;
   }
 

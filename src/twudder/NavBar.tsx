@@ -5,7 +5,7 @@ const NavBar = () => {
     return <div className="nav-outer">
         <div className="nav-title">🐄 = ❤️ ≠ 🍔</div>
         <div className="nav-search-wrapper">
-            <input placeholder="Type a @user or #tag, and press enter" className="nav-search"></input>
+            <input placeholder="Type a @user or #tag, and press enter" className="moo-input"></input>
         </div>
         <div className="nav-account">
             <AccountPic color="red" text="R" />

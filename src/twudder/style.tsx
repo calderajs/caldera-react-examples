@@ -68,7 +68,7 @@ const style = css`
 
   }
 
-  .nav-account-pic {
+  .account-pic {
     height: 42px;
     width: 42px;
     border-radius: 21px;

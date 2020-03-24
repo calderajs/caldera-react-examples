@@ -3,6 +3,11 @@ import { renderCalderaApp, useLocation, useHistory, Head } from 'caldera';
 import style from "./style";
 import NavBar from "./NavBar";
 
+const Feed = () => {
+    return <div className="feed-outer">
+    </div>
+}
+
 const App = () => {
     const location = useLocation();
     const history = useHistory();
@@ -19,6 +24,8 @@ const App = () => {
                 <style>{style}</style>
             </Head>
             <NavBar />
+            <Feed />
+
         </>
 
     );

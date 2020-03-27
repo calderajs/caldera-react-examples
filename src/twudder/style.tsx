@@ -32,6 +32,8 @@ const style = css`
     align-items: center;
     background: #fff;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
+    position: sticky;
+    top: 0;
   }
 
   .nav-account-outer {

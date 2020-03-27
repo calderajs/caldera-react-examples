@@ -25,7 +25,6 @@ const style = css`
   }
 
   .nav-outer {
-    justify-content: space-between;
     display: flex;
     height: 64px;
     width: 100%;
@@ -38,6 +37,7 @@ const style = css`
 
   .nav-account-outer {
     padding: 0 16px;
+    margin-left: auto;
   }
 
   .moo {
@@ -45,6 +45,7 @@ const style = css`
   }
 
   .nav-title {
+    margin-right: auto;
     font-size: 30px;
     font-weight: bold;
     padding: 0 16px;

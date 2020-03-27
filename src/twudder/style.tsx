@@ -147,7 +147,7 @@ const style = css`
     flex-direction: column;
   }
 
-  .moo-submit {
+  input[type="button"] {
     border-radius: 4px;
     background: #36a0ec;
     color: #fff;
@@ -156,10 +156,20 @@ const style = css`
     text-decoration: none;
     font-size: 16px;
     border: none;
+    cursor: pointer;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    transition: background 0.2s;
   }
 
-  .moo-submit:disabled {
+  input[type="button"]:hover {
+    background: #43abf5;
+  }
+
+  input[type="button"]:active {
+    background: #2691de;
+  }
+
+  input[type="button"]:disabled {
     background: #a0a0a0;
   }
 

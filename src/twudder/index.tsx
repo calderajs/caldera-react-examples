@@ -4,6 +4,7 @@ import style from "./style";
 import NavBar from "./NavBar";
 import AccountPic from "./AccountPic";
 import MooBox from "./MooBox";
+import Login from "./Login";
 
 
 const NewMoo = () => {
@@ -66,7 +67,9 @@ const Feed = () => {
 
 
 const App = () => {
-  const [login, setLogin] = useState(null);
+  const [account, setAccount] = useState<Account | null>(null);
+  const [showLoginMenu, setShowLoginMenu] = useState(false);
+
   return (
     <>
       <Head>
@@ -77,7 +80,9 @@ const App = () => {
         />
         <style>{style}</style>
       </Head>
-      <NavBar />
+      <NavBar account={account} setAccount={setAccount} setShowLoginMenu={setShowLoginMenu} showLoginMenu={showLoginMenu} />
+      {showLoginMenu ? <Login /> : <></>}
+
       <Feed />
     </>
   );

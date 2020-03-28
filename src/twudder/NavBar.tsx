@@ -28,7 +28,13 @@ const NavBar = ({
 
   return (
     <div className="nav-outer">
-      <div className="nav-title" onClick={() => history.push("")}>
+      <div
+        className="nav-title"
+        onClick={() => {
+          setQuery("");
+          history.push("");
+        }}
+      >
         🐄 = ❤️ ≠ 🍔
       </div>
       <div className="input-wrapper">

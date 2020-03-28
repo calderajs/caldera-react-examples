@@ -32,7 +32,8 @@ const Login = ({
         password === "" ||
         confPassword === "" ||
         name === "" ||
-        confPassword !== password
+        confPassword !== password ||
+        accounts.has(username)
       ) {
         return;
       }

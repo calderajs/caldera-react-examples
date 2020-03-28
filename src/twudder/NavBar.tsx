@@ -4,11 +4,12 @@ import AccountPic from "./AccountPic"
 const NavBar = () => {
     return <div className="nav-outer">
         <div className="nav-title">🐄 = ❤️ ≠ 🍔</div>
-        <div className="nav-search-wrapper">
-            <input placeholder="Type a @user or #tag, and press enter" className="moo-input"></input>
+        <div className="input-wrapper">
+            <input placeholder="Type a @user or #tag, and press enter" className="moo-input search"></input>
         </div>
         <div className="nav-account-outer">
             <div className="account">
+                <input type="button" value="Login" />
                 <AccountPic color="red" text="R" />
                 <div className="account-name-wrapper">
                     <div className="account-name">Rahul GS</div>

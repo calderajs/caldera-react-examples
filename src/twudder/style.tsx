@@ -21,7 +21,7 @@ const style = css`
   body,
   input,
   textarea {
-    font-family: "Work Sans", sans-serif;
+    font-family: 'Roboto', sans-serif;
   }
 
   .nav-outer {
@@ -42,6 +42,7 @@ const style = css`
 
   .moo {
     min-height: 168px;
+    padding: 24px;
   }
 
   .nav-title {
@@ -59,9 +60,12 @@ const style = css`
 
   .moo-input {
     height: 42px;
-    width: 400px;
     border: none;
     font-size: 16px;
+  }
+
+  .search {
+    width: 400px;
   }
 
   .moo-input.moo-textarea {
@@ -71,7 +75,7 @@ const style = css`
     padding: 0;
   }
 
-  .nav-search-wrapper {
+  .input-wrapper {
     padding: 0 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
     border-radius: 4px;
@@ -131,7 +135,6 @@ const style = css`
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
     border-radius: 4px;
     background: #fff;
-    padding: 24px;
     margin: 16px 0;
   }
 
@@ -148,13 +151,15 @@ const style = css`
     justify-content: space-between;
     display: flex;
     flex-direction: column;
+    padding: 24px;
+
   }
 
   input[type="button"] {
     border-radius: 4px;
     background: #36a0ec;
     color: #fff;
-    padding: 15px 32px;
+    padding: 12px 32px;
     text-align: center;
     text-decoration: none;
     font-size: 16px;
@@ -185,6 +190,48 @@ const style = css`
 
   .new-moo-char-count {
     color: #aaa;
+  }
+
+  .login {
+    position: absolute;
+    right:16px;
+    width: 300px;
+  }
+
+  .login-inner {
+    padding: 12px 24px;
+  }
+  .toggle-wrapper {
+    display: flex;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  .spacer {
+    width: 8px;
+  }
+  .toggle{
+    flex: 1;
+    font-size: 16px;
+    font-weight:bold;
+    padding: 8px 0;
+    /* border-bottom: 2px solid #36A0EC; */
+    color: #aaa;
+cursor: pointer;
+
+  }
+
+  .active {
+    border-bottom: 2px solid #36A0EC;
+    color: #000
+  }
+
+  .login-padding {
+    height: 12px;
+
+  }
+  .login-button {
+    width :100%;
   }
 `;
 

@@ -72,7 +72,12 @@ const Login = ({
               Log in
             </div>
           </div>
-          <form onSubmit={onSubmitLoginForm}>
+          <form
+            onSubmit={e => {
+              e.preventDefault();
+              onSubmitLoginForm();
+            }}
+          >
             {!isLogin ? (
               <>
                 <div className="input-wrapper">

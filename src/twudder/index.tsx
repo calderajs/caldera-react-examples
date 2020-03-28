@@ -73,7 +73,7 @@ const App = () => {
   return (
     <>
       <Head>
-        <title>{`hi`}</title>
+        <title>{`Twudder`}</title>
         <link
           href="https://fonts.googleapis.com/css?family=Roboto&display=swap"
           rel="stylesheet"

@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  renderCalderaApp,
-  useLocation,
-  useHistory,
-  Head,
-  makeSharedResource,
-  useSharedState
-} from "caldera";
+import { renderCalderaApp, useLocation, Head, useSharedState } from "caldera";
 import style from "./style";
 import NavBar from "./NavBar";
 import AccountPic from "./AccountPic";
@@ -42,6 +35,22 @@ const Feed = ({
 }) => {
   const [moos, setMoos] = useSharedState(moosResource);
   const params = new URLSearchParams(filter.slice(1));
+
+  const filterMoos = ({
+    account,
+    text
+  }: {
+    account: MooAccount;
+    text: string;
+  }) => {
+    if (filter === "") return true;
+    if (params.has("mention"))
+      return account.username === params.get("mention");
+    const tags = params.get("tags");
+    if (tags !== null) return text.includes(tags);
+    return false;
+  };
+
   return (
     <div className="feed-outer">
       <div className="feed-inner">
@@ -49,9 +58,12 @@ const Feed = ({
         {account ? (
           <NewMoo setMoos={setMoos} account={account} moos={moos} />
         ) : null}
-        {moos.reverse().map(m => (
-          <Moo moo={m} />
-        ))}
+        {moos
+          .filter(filterMoos)
+          .reverse()
+          .map(m => (
+            <Moo moo={m} />
+          ))}
       </div>
     </div>
   );

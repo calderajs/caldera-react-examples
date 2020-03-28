@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory, useLocation } from "caldera";
+import { useHistory } from "caldera";
 import AccountPic from "./AccountPic";
 import { MooAccount } from "./Account";
 
@@ -28,7 +28,9 @@ const NavBar = ({
 
   return (
     <div className="nav-outer">
-      <div className="nav-title">🐄 = ❤️ ≠ 🍔</div>
+      <div className="nav-title" onClick={() => history.push("")}>
+        🐄 = ❤️ ≠ 🍔
+      </div>
       <div className="input-wrapper">
         <input
           placeholder="Type a @user or #tag, and press enter"

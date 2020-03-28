@@ -23,7 +23,7 @@ const NavBar = ({
     if (query[0] === "@") params.append("mention", query.slice(1));
     else if (query[0] === "#") params.append("tags", query.slice(1));
     else return;
-    history.push("/search" + "?" + params.toString());
+    history.push(`/search?${params.toString()}`);
   };
 
   return (
@@ -52,7 +52,7 @@ const NavBar = ({
             <AccountPic username={account.username} name={account.name} />
             <div className="account-name-wrapper">
               <div className="account-name">{account.name}</div>
-              <div className="account-id">{"@" + account.username}</div>
+              <div className="account-id">{`@${account.username}`}</div>
             </div>
           </div>
         ) : (

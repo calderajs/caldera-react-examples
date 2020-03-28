@@ -36,12 +36,12 @@ const Feed = ({
   const [moos, setMoos] = useSharedState(moosResource);
   const params = new URLSearchParams(filter.slice(1));
 
-  const filterMoos = ({ account, text, tags }: MooType) => {
+  const filterMoos = ({ account, tags }: MooType) => {
     if (filter === "") return true;
     if (params.has("mention"))
       return account.username === params.get("mention");
     const paramTag = params.get("tags");
-    if (paramTag !== null) return tags.includes("#" + paramTag);
+    if (paramTag !== null) return tags.includes(`#${paramTag}`);
     return false;
   };
 

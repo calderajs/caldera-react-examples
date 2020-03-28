@@ -131,7 +131,7 @@ const Login = ({
             <div className="login-padding" />
             <input
               type="submit"
-              value={isLogin ? "Login" : "Join Twudder"}
+              value={isLogin ? "Rejoin the Udderverse" : "Join the Udderverse"}
               className="login-button"
             ></input>
           </form>

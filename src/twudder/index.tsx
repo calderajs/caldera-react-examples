@@ -33,15 +33,22 @@ const Moo = ({ moo }: { moo: MooType }) => {
   );
 };
 
-const Feed = ({ account }: { account: MooAccount | null }) => {
+const Feed = ({
+  account,
+  filter
+}: {
+  account: MooAccount | null;
+  filter: string;
+}) => {
   const [moos, setMoos] = useSharedState(moosResource);
+  const params = new URLSearchParams(filter.slice(1));
   return (
     <div className="feed-outer">
       <div className="feed-inner">
+        <code>Code: {params.toString()}</code>
         {account ? (
           <NewMoo setMoos={setMoos} account={account} moos={moos} />
         ) : null}
-
         {moos.reverse().map(m => (
           <Moo moo={m} />
         ))}
@@ -53,6 +60,8 @@ const Feed = ({ account }: { account: MooAccount | null }) => {
 const App = () => {
   const [account, setAccount] = useState<MooAccount | null>(null);
   const [showLoginMenu, setShowLoginMenu] = useState(false);
+  const location = useLocation();
+
   return (
     <div onClick={() => setShowLoginMenu(false)}>
       <Head>
@@ -74,7 +83,7 @@ const App = () => {
       ) : (
         <></>
       )}
-      <Feed account={account} />
+      <Feed account={account} filter={location.search} />
     </div>
   );
 };

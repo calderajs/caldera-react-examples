@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useHistory, useLocation } from "caldera";
 import AccountPic from "./AccountPic";
 import { MooAccount } from "./Account";
 
@@ -13,6 +14,18 @@ const NavBar = ({
   setShowLoginMenu: React.Dispatch<React.SetStateAction<boolean>>;
   showLoginMenu: boolean;
 }) => {
+  const history = useHistory();
+  const [query, setQuery] = useState("");
+
+  const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key !== "Enter") return;
+    const params = new URLSearchParams();
+    if (query[0] === "@") params.append("mention", query.slice(1));
+    else if (query[0] === "#") params.append("tags", query.slice(1));
+    else return;
+    history.push("/search" + "?" + params.toString());
+  };
+
   return (
     <div className="nav-outer">
       <div className="nav-title">🐄 = ❤️ ≠ 🍔</div>
@@ -20,6 +33,9 @@ const NavBar = ({
         <input
           placeholder="Type a @user or #tag, and press enter"
           className="moo-input search"
+          value={query}
+          onChange={e => setQuery(e.target.value)}
+          onKeyPress={handleSearch}
         ></input>
       </div>
       <div className="nav-account-outer">

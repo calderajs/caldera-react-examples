@@ -22,7 +22,10 @@ const NavBar = ({
     const params = new URLSearchParams();
     if (query[0] === "@") params.append("mention", query.slice(1));
     else if (query[0] === "#") params.append("tags", query.slice(1));
-    else return;
+    else if (query === "") {
+      history.push("");
+      return;
+    } else return;
     history.push(`/search?${params.toString()}`);
   };
 

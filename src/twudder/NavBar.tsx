@@ -41,7 +41,10 @@ const NavBar = ({
           <input
             type="button"
             value="Login"
-            onClick={() => setShowLoginMenu(!showLoginMenu)}
+            onClick={e => {
+              e.stopPropagation();
+              setShowLoginMenu(!showLoginMenu);
+            }}
           />
         )}
       </div>

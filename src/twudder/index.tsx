@@ -4,7 +4,8 @@ import {
   useLocation,
   useHistory,
   Head,
-  makeSharedResource
+  makeSharedResource,
+  useSharedState
 } from "caldera";
 import style from "./style";
 import NavBar from "./NavBar";
@@ -13,16 +14,21 @@ import MooBox from "./MooBox";
 import Login from "./Login";
 import NewMoo from "./NewMoo";
 import { MooAccount } from "./Account";
+interface Moo {
+  account: MooAccount;
+  text: string;
+}
 
-const Moo = () => {
+const moosResource = makeSharedResource<Moo[]>([]);
+const Moo = ({ moo }: { moo: Moo }) => {
   return (
     <MooBox>
       <div className="moo">
         <div className="account">
           <AccountPic color="red" text="R" />
           <div className="account-name-wrapper">
-            <div className="account-name">Rahul GS</div>
-            <div className="account-id">@cho</div>
+            <div className="account-name">{moo.account.name}</div>
+            <div className="account-id">{`@${moo.account.username}`}</div>
           </div>
         </div>
       </div>
@@ -31,11 +37,14 @@ const Moo = () => {
 };
 
 const Feed = () => {
+  const [moos, setMoos] = useSharedState(moosResource);
   return (
     <div className="feed-outer">
       <div className="feed-inner">
         <NewMoo />
-        <Moo />
+        {moos.map(m => (
+          <Moo moo={m} />
+        ))}
       </div>
     </div>
   );

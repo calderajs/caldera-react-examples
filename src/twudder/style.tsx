@@ -41,7 +41,6 @@ const style = css`
   }
 
   .moo {
-    min-height: 168px;
     padding: 24px;
   }
 
@@ -86,6 +85,11 @@ const style = css`
     color: #888;
     opacity: 1;
     font-size: 16px;
+  }
+
+  .moo-content {
+    padding-top: 16px;
+    font-size: 18px;
   }
 
   .account {

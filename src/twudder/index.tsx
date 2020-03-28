@@ -14,13 +14,9 @@ import MooBox from "./MooBox";
 import Login from "./Login";
 import NewMoo from "./NewMoo";
 import { MooAccount } from "./Account";
-interface Moo {
-  account: MooAccount;
-  text: string;
-}
+import { MooType, moosResource } from "./Moo";
 
-const moosResource = makeSharedResource<Moo[]>([]);
-const Moo = ({ moo }: { moo: Moo }) => {
+const Moo = ({ moo }: { moo: MooType }) => {
   return (
     <MooBox>
       <div className="moo">
@@ -31,18 +27,19 @@ const Moo = ({ moo }: { moo: Moo }) => {
             <div className="account-id">{`@${moo.account.username}`}</div>
           </div>
         </div>
+        <div className="moo-content">{moo.text}</div>
       </div>
     </MooBox>
   );
 };
 
-const Feed = () => {
+const Feed = ({ account }: { account: MooAccount }) => {
   const [moos, setMoos] = useSharedState(moosResource);
   return (
     <div className="feed-outer">
       <div className="feed-inner">
-        <NewMoo />
-        {moos.map(m => (
+        <NewMoo setMoos={setMoos} account={account} moos={moos} />
+        {moos.reverse().map(m => (
           <Moo moo={m} />
         ))}
       </div>
@@ -74,8 +71,7 @@ const App = () => {
       ) : (
         <></>
       )}
-
-      <Feed />
+      {account ? <Feed account={account} /> : null}
     </div>
   );
 };

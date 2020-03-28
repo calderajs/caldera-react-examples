@@ -49,7 +49,7 @@ const NavBar = ({
               setAccount(null);
             }}
           >
-            <AccountPic color="red" text={account.name[0].toUpperCase()} />
+            <AccountPic username={account.username} name={account.name} />
             <div className="account-name-wrapper">
               <div className="account-name">{account.name}</div>
               <div className="account-id">{"@" + account.username}</div>

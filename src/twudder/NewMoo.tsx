@@ -24,7 +24,8 @@ const NewMoo = ({
             setMoos([
               {
                 account,
-                text: value
+                text: value,
+                tags: value.split(" ").filter(w => w[0] === "#")
               },
               ...moos
             ]);
@@ -32,7 +33,7 @@ const NewMoo = ({
           }}
         >
           <div className="new-moo-input-wrapper">
-            <AccountPic color="green" text="R" />
+            <AccountPic username={account.username} name={account.name} />
             <textarea
               value={value}
               onChange={e => setValue(e.target.value)}

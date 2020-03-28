@@ -14,7 +14,7 @@ const Moo = ({ moo }: { moo: MooType }) => {
     <MooBox>
       <div className="moo">
         <div className="account">
-          <AccountPic color="red" text="R" />
+          <AccountPic username={moo.account.username} name={moo.account.name} />
           <div className="account-name-wrapper">
             <div className="account-name">{moo.account.name}</div>
             <div className="account-id">{`@${moo.account.username}`}</div>
@@ -36,34 +36,24 @@ const Feed = ({
   const [moos, setMoos] = useSharedState(moosResource);
   const params = new URLSearchParams(filter.slice(1));
 
-  const filterMoos = ({
-    account,
-    text
-  }: {
-    account: MooAccount;
-    text: string;
-  }) => {
+  const filterMoos = ({ account, text, tags }: MooType) => {
     if (filter === "") return true;
     if (params.has("mention"))
       return account.username === params.get("mention");
-    const tags = params.get("tags");
-    if (tags !== null) return text.includes(tags);
+    const paramTag = params.get("tags");
+    if (paramTag !== null) return tags.includes("#" + paramTag);
     return false;
   };
 
   return (
     <div className="feed-outer">
       <div className="feed-inner">
-        <code>Code: {params.toString()}</code>
         {account ? (
           <NewMoo setMoos={setMoos} account={account} moos={moos} />
         ) : null}
-        {moos
-          .filter(filterMoos)
-          .reverse()
-          .map(m => (
-            <Moo moo={m} />
-          ))}
+        {moos.filter(filterMoos).map(m => (
+          <Moo moo={m} />
+        ))}
       </div>
     </div>
   );

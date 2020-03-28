@@ -49,12 +49,7 @@ const style = css`
     font-size: 30px;
     font-weight: bold;
     padding: 0 16px;
-  }
-
-  .nav-title {
-    font-size: 30px;
-    font-weight: bold;
-    padding-left: 4px;
+    cursor: pointer;
   }
 
   .moo-input {

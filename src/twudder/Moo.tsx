@@ -4,6 +4,7 @@ import { makeSharedResource } from "caldera";
 export interface MooType {
   account: MooAccount;
   text: string;
+  tags: string[];
 }
 
 export const moosResource = makeSharedResource<MooType[]>([]);

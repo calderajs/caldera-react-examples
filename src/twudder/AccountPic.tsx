@@ -1,8 +1,12 @@
 import React, { useState } from "react";
+import randomColor from "randomcolor";
 
-const AccountPic = ({ color, text }: { color: string; text: string }) => (
-  <div className="account-pic" style={{ background: color }}>
-    {text}
+const AccountPic = ({ username, name }: { username: string; name: string }) => (
+  <div
+    className="account-pic"
+    style={{ background: randomColor({ seed: username }) }}
+  >
+    {name[0].toUpperCase()}
   </div>
 );
 export default AccountPic;

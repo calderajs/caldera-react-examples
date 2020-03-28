@@ -22,11 +22,11 @@ const NewMoo = ({
           onSubmit={e => {
             e.preventDefault();
             setMoos([
-              ...moos,
               {
                 account,
                 text: value
-              }
+              },
+              ...moos
             ]);
             setValue("");
           }}

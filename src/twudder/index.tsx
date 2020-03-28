@@ -33,12 +33,15 @@ const Moo = ({ moo }: { moo: MooType }) => {
   );
 };
 
-const Feed = ({ account }: { account: MooAccount }) => {
+const Feed = ({ account }: { account: MooAccount | null }) => {
   const [moos, setMoos] = useSharedState(moosResource);
   return (
     <div className="feed-outer">
       <div className="feed-inner">
-        <NewMoo setMoos={setMoos} account={account} moos={moos} />
+        {account ? (
+          <NewMoo setMoos={setMoos} account={account} moos={moos} />
+        ) : null}
+
         {moos.reverse().map(m => (
           <Moo moo={m} />
         ))}
@@ -71,7 +74,7 @@ const App = () => {
       ) : (
         <></>
       )}
-      {account ? <Feed account={account} /> : null}
+      <Feed account={account} />
     </div>
   );
 };

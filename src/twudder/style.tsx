@@ -21,7 +21,7 @@ const style = css`
   body,
   input,
   textarea {
-    font-family: 'Roboto', sans-serif;
+    font-family: "Roboto", sans-serif;
   }
 
   .nav-outer {
@@ -152,10 +152,10 @@ const style = css`
     display: flex;
     flex-direction: column;
     padding: 24px;
-
   }
 
-  input[type="button"] {
+  input[type="button"],
+  input[type="submit"] {
     border-radius: 4px;
     background: #36a0ec;
     color: #fff;
@@ -194,7 +194,7 @@ const style = css`
 
   .login {
     position: absolute;
-    right:16px;
+    right: 16px;
     width: 300px;
   }
 
@@ -210,28 +210,26 @@ const style = css`
   .spacer {
     width: 8px;
   }
-  .toggle{
+  .toggle {
     flex: 1;
     font-size: 16px;
-    font-weight:bold;
+    font-weight: bold;
     padding: 8px 0;
     /* border-bottom: 2px solid #36A0EC; */
     color: #aaa;
-cursor: pointer;
-
+    cursor: pointer;
   }
 
   .active {
-    border-bottom: 2px solid #36A0EC;
-    color: #000
+    border-bottom: 2px solid #36a0ec;
+    color: #000;
   }
 
   .login-padding {
     height: 12px;
-
   }
   .login-button {
-    width :100%;
+    width: 100%;
   }
 `;
 

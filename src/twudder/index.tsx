@@ -1,42 +1,18 @@
 import React, { useState } from "react";
-import { renderCalderaApp, useLocation, useHistory, Head } from "caldera";
+import {
+  renderCalderaApp,
+  useLocation,
+  useHistory,
+  Head,
+  makeSharedResource
+} from "caldera";
 import style from "./style";
 import NavBar from "./NavBar";
 import AccountPic from "./AccountPic";
 import MooBox from "./MooBox";
 import Login from "./Login";
-
-
-const NewMoo = () => {
-  const [value, setValue] = useState("");
-
-  return (
-    <MooBox>
-      <div className="new-moo-wrapper">
-        <div className="new-moo-input-wrapper">
-          <AccountPic color="green" text="R" />
-          <textarea
-            value={value}
-            onChange={e => setValue(e.target.value)}
-            placeholder="Type your moo here..."
-            className="moo-input moo-textarea"
-            rows={5}
-            maxLength={140}
-          ></textarea>
-        </div>
-        <div className="new-moo-submit-wrapper">
-          <span className="new-moo-char-count"> {value.length}/140 </span>
-          <input
-            type="button"
-            className="moo-submit"
-            value="Moo"
-            {...(value.length >= 140 && { disabled: true })}
-          ></input>
-        </div>
-      </div>
-    </MooBox>
-  );
-};
+import NewMoo from "./NewMoo";
+import { MooAccount } from "./Account";
 
 const Moo = () => {
   return (
@@ -65,11 +41,9 @@ const Feed = () => {
   );
 };
 
-
 const App = () => {
-  const [account, setAccount] = useState<Account | null>(null);
+  const [account, setAccount] = useState<MooAccount | null>(null);
   const [showLoginMenu, setShowLoginMenu] = useState(false);
-
   return (
     <>
       <Head>
@@ -80,8 +54,17 @@ const App = () => {
         />
         <style>{style}</style>
       </Head>
-      <NavBar account={account} setAccount={setAccount} setShowLoginMenu={setShowLoginMenu} showLoginMenu={showLoginMenu} />
-      {showLoginMenu ? <Login /> : <></>}
+      <NavBar
+        account={account}
+        setAccount={setAccount}
+        setShowLoginMenu={setShowLoginMenu}
+        showLoginMenu={showLoginMenu}
+      />
+      {showLoginMenu ? (
+        <Login setShowLoginMenu={setShowLoginMenu} setAccount={setAccount} />
+      ) : (
+        <></>
+      )}
 
       <Feed />
     </>

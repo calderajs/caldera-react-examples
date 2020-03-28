@@ -54,7 +54,7 @@ const Login = ({
   };
 
   return (
-    <div className="login">
+    <div className="login" onClick={e => e.stopPropagation()}>
       <MooBox>
         <div className="login-inner">
           <div className="toggle-wrapper">

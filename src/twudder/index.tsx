@@ -45,7 +45,7 @@ const App = () => {
   const [account, setAccount] = useState<MooAccount | null>(null);
   const [showLoginMenu, setShowLoginMenu] = useState(false);
   return (
-    <>
+    <div onClick={() => setShowLoginMenu(false)}>
       <Head>
         <title>{`Twudder`}</title>
         <link
@@ -67,7 +67,7 @@ const App = () => {
       )}
 
       <Feed />
-    </>
+    </div>
   );
 };
 

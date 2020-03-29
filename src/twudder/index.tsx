@@ -9,7 +9,16 @@ import NewMoo from "./NewMoo";
 import { MooAccount } from "./Account";
 import { MooType, moosResource } from "./Moo";
 
+// Do tag and mention detection with blue highlights
 const Moo = ({ moo }: { moo: MooType }) => {
+  const initial: (string | JSX.Element)[] = [""];
+  const adjusted = moo.text.split(" ").reduce((acc, w) => {
+    if (w[0] === "@" || w[0] === "#")
+      acc.push(<span style={{ color: "#54C1FF" }}>{w}</span>, " ");
+    else acc[acc.length - 1] = acc[acc.length - 1] + w + " ";
+    return acc;
+  }, initial);
+
   return (
     <MooBox>
       <div className="moo">
@@ -20,7 +29,7 @@ const Moo = ({ moo }: { moo: MooType }) => {
             <div className="account-id">{`@${moo.account.username}`}</div>
           </div>
         </div>
-        <div className="moo-content">{moo.text}</div>
+        <div className="moo-content">{adjusted}</div>
       </div>
     </MooBox>
   );
@@ -34,14 +43,19 @@ const Feed = ({
   filter: string;
 }) => {
   const [moos, setMoos] = useSharedState(moosResource);
-  const params = new URLSearchParams(filter.slice(1));
+  const searchParams = new URLSearchParams(filter.slice(1));
 
-  const filterMoos = ({ account, tags }: MooType) => {
+  const filterMoos = ({ account, tags, mentions }: MooType) => {
     if (filter === "") return true;
-    if (params.has("mention"))
-      return account.username === params.get("mention");
-    const paramTag = params.get("tags");
-    if (paramTag !== null) return tags.includes(`#${paramTag}`);
+    const searchMention = searchParams.get("mention");
+    const searchTag = searchParams.get("tags");
+
+    if (searchMention !== null)
+      return (
+        account.username === searchParams.get("mention") ||
+        mentions.includes(`@${searchMention}`)
+      );
+    if (searchTag !== null) return tags.includes(`#${searchTag}`);
     return false;
   };
 

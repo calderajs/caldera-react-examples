@@ -5,6 +5,7 @@ export interface MooType {
   account: MooAccount;
   text: string;
   tags: string[];
+  mentions: string[];
 }
 
 export const moosResource = makeSharedResource<MooType[]>([]);

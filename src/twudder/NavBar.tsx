@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory, useLocation } from "caldera";
 import AccountPic from "./AccountPic";
 import { MooAccount } from "./Account";
@@ -17,22 +17,27 @@ const NavBar = ({
 }) => {
   const history = useHistory();
   const location = useLocation();
-  const search = new URLSearchParams(location.search);
   const [query, setQuery] = useState("");
-
-  const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key !== "Enter") return;
-    const params = new URLSearchParams();
-    if (query[0] === "@") params.append("mention", query.slice(1));
-    else if (query[0] === "#") params.append("tags", query.slice(1));
-    else if (query === "") {
-      history.push("");
-      return;
-    } else return;
-    history.push(`/search?${params.toString()}`);
-  };
-
   const validQuery = query[0] === "@" || query[0] === "#";
+
+  useEffect(() => {
+    if (query.length === 0 && location.pathname !== "/") {
+      history.push("/");
+    } else if (query.length > 1 && validQuery) {
+      const params = new URLSearchParams();
+      if (query[0] === "@") {
+        params.append("mention", query.slice(1));
+      } else if (query[0] === "#") {
+        params.append("tags", query.slice(1));
+      }
+
+      const timeoutTask = setTimeout(
+        () => history.push(`/search?${params.toString()}`),
+        300
+      );
+      return () => clearTimeout(timeoutTask);
+    }
+  }, [query, validQuery, history, location.pathname]);
 
   return (
     <div className="nav-outer">
@@ -57,8 +62,7 @@ const NavBar = ({
           className="moo-input search"
           value={query}
           onChange={e => setQuery(e.target.value)}
-          onKeyPress={handleSearch}
-        ></input>
+        />
       </div>
       <div className="nav-account-outer">
         {account ? (

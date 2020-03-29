@@ -64,6 +64,7 @@ const style = css`
     font-size: 16px;
     padding: 0;
     width: 100%;
+    background: none;
   }
 
   .search {
@@ -81,7 +82,16 @@ const style = css`
     padding: 0 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
     border-radius: 4px;
+    box-sizing: border-box;
     /* border-style: solid; */
+  }
+
+  .input-wrapper.invalid {
+    border: 2px solid red;
+  }
+
+  .input-wrapper.active {
+    border: 2px solid #2691de;
   }
 
   .nav-search::placeholder {

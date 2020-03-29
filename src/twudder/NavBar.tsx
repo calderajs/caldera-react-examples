@@ -42,9 +42,9 @@ const NavBar = ({
       const params = new URLSearchParams();
 
       if (query[0] === "@") {
-        params.append("mention", query.slice(1));
+        params.append("mention", query.replace(/\W/g, ""));
       } else if (query[0] === "#") {
-        params.append("tags", query.slice(1));
+        params.append("tags", query.replace(/\W/g, ""));
       }
 
       const url = `/search?${params.toString()}`;

@@ -25,8 +25,14 @@ const NewMoo = ({
               {
                 account,
                 text: value,
-                tags: value.split(" ").filter(w => w[0] === "#"),
-                mentions: value.split(" ").filter(w => w[0] === "@")
+                tags: value
+                  .split(" ")
+                  .filter(w => w[0] === "#")
+                  .map(w => w.replace(/\W/g, "")),
+                mentions: value
+                  .split(" ")
+                  .filter(w => w[0] === "@")
+                  .map(w => w.replace(/\W/g, ""))
               },
               ...moos
             ]);

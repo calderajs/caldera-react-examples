@@ -22,10 +22,16 @@ const Moo = ({ moo }: { moo: MooType }) => {
   const tagClick = (tag: string, word: string) => () =>
     history.push(`/search?${tag}=${word}`);
   const tokenized = moo.text.split(" ").reduce((acc, w) => {
-    if (w[0] === "@" || w[0] === "#")
+    if (
+      (w[0] === "@" || w[0] === "#") &&
+      w.slice(1).startsWith(w.replace(/\W/g, ""))
+    )
       acc.push(
         <span
-          onClick={tagClick(w[0] === "@" ? "mention" : "tags", w.slice(1))}
+          onClick={tagClick(
+            w[0] === "@" ? "mention" : "tags",
+            w.replace(/\W/g, "")
+          )}
           style={{ color: "#54C1FF", cursor: "pointer" }}
         >
           {w}
@@ -70,9 +76,9 @@ const Feed = ({
     if (searchMention !== null)
       return (
         account.username === searchParams.get("mention") ||
-        mentions.includes(`@${searchMention}`)
+        mentions.includes(searchMention)
       );
-    if (searchTag !== null) return tags.includes(`#${searchTag}`);
+    if (searchTag !== null) return tags.includes(searchTag);
     return false;
   };
 

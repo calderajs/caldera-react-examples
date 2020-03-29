@@ -62,6 +62,8 @@ const style = css`
     height: 42px;
     border: none;
     font-size: 16px;
+    padding: 0;
+    width: 100%;
   }
 
   .search {

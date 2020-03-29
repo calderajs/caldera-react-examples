@@ -20,6 +20,11 @@ const NavBar = ({
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key !== "Enter") return;
     const params = new URLSearchParams();
+    if (query === "") {
+      history.push(`/`);
+
+      return;
+    }
     if (query[0] === "@") params.append("mention", query.slice(1));
     else if (query[0] === "#") params.append("tags", query.slice(1));
     else return;

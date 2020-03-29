@@ -21,6 +21,7 @@ const NewMoo = ({
         <form
           onSubmit={e => {
             e.preventDefault();
+            if (value === "") return;
             setMoos([
               {
                 account,

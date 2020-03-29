@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { renderCalderaApp, useLocation, Head, useSharedState } from "caldera";
+import {
+  renderCalderaApp,
+  useLocation,
+  Head,
+  useSharedState,
+  useHistory
+} from "caldera";
 import style from "./style";
 import NavBar from "./NavBar";
 import AccountPic from "./AccountPic";
@@ -11,10 +17,21 @@ import { MooType, moosResource } from "./Moo";
 
 // Do tag and mention detection with blue highlights
 const Moo = ({ moo }: { moo: MooType }) => {
+  const history = useHistory();
   const initial: (string | JSX.Element)[] = [""];
-  const adjusted = moo.text.split(" ").reduce((acc, w) => {
+  const tagClick = (tag: string, word: string) => () =>
+    history.push(`/search?${tag}=${word}`);
+  const tokenized = moo.text.split(" ").reduce((acc, w) => {
     if (w[0] === "@" || w[0] === "#")
-      acc.push(<span style={{ color: "#54C1FF" }}>{w}</span>, " ");
+      acc.push(
+        <span
+          onClick={tagClick(w[0] === "@" ? "mention" : "tags", w.slice(1))}
+          style={{ color: "#54C1FF", cursor: "pointer" }}
+        >
+          {w}
+        </span>,
+        " "
+      );
     else acc[acc.length - 1] = acc[acc.length - 1] + w + " ";
     return acc;
   }, initial);
@@ -29,7 +46,7 @@ const Moo = ({ moo }: { moo: MooType }) => {
             <div className="account-id">{`@${moo.account.username}`}</div>
           </div>
         </div>
-        <div className="moo-content">{adjusted}</div>
+        <div className="moo-content">{tokenized}</div>
       </div>
     </MooBox>
   );

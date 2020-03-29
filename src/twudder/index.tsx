@@ -104,7 +104,7 @@ const App = () => {
   return (
     <div id="twudder-app" onClick={() => setShowLoginMenu(false)}>
       <Head>
-        <title>{`Twudder`}</title>
+        <title>Twudder</title>
         <link
           href="https://fonts.googleapis.com/css?family=Roboto&display=swap"
           rel="stylesheet"

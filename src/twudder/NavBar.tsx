@@ -21,23 +21,41 @@ const NavBar = ({
   const validQuery = query[0] === "@" || query[0] === "#";
 
   useEffect(() => {
+    const search = new URLSearchParams(location.search);
+    const mention = search.get("mention");
+    const tags = search.get("tags");
+
+    if (mention) {
+      setQuery("@" + mention);
+    } else if (tags) {
+      setQuery("#" + tags);
+    } else {
+      setQuery("");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search]);
+
+  useEffect(() => {
     if (query.length === 0 && location.pathname !== "/") {
       history.push("/");
     } else if (query.length > 1 && validQuery) {
       const params = new URLSearchParams();
+
       if (query[0] === "@") {
         params.append("mention", query.slice(1));
       } else if (query[0] === "#") {
         params.append("tags", query.slice(1));
       }
 
-      const timeoutTask = setTimeout(
-        () => history.push(`/search?${params.toString()}`),
-        300
-      );
-      return () => clearTimeout(timeoutTask);
+      const url = `/search?${params.toString()}`;
+
+      if (location.pathname + location.search !== url) {
+        const timeoutTask = setTimeout(() => history.push(url), 300);
+        return () => clearTimeout(timeoutTask);
+      }
     }
-  }, [query, validQuery, history, location.pathname]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, validQuery]);
 
   return (
     <div className="nav-outer">

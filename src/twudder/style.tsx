@@ -12,10 +12,16 @@ const style = css`
   }
 
   body {
-    height: 100%;
     margin: 0;
     font-size: 14px;
     background: #f0f0f0;
+  }
+
+  html,
+  body,
+  #root,
+  #twudder-app {
+    height: 100%;
   }
 
   body,

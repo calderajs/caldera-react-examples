@@ -65,7 +65,7 @@ const App = () => {
   const location = useLocation();
 
   return (
-    <div onClick={() => setShowLoginMenu(false)}>
+    <div id="twudder-app" onClick={() => setShowLoginMenu(false)}>
       <Head>
         <title>{`Twudder`}</title>
         <link

@@ -58,7 +58,7 @@ const NavBar = ({
         )}
       >
         <input
-          placeholder="Type a @user or #tag, and press enter"
+          placeholder="Type a @user or #tag"
           className="moo-input search"
           value={query}
           onChange={e => setQuery(e.target.value)}

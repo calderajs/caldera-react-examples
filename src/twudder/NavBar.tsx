@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory } from "caldera";
+import { useHistory, useLocation } from "caldera";
 import AccountPic from "./AccountPic";
 import { MooAccount } from "./Account";
 
@@ -15,6 +15,9 @@ const NavBar = ({
   showLoginMenu: boolean;
 }) => {
   const history = useHistory();
+  const location = useLocation();
+  const search = new URLSearchParams(location.search);
+  console.log(search);
   const [query, setQuery] = useState("");
 
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {

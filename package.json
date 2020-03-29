@@ -17,8 +17,10 @@
   "author": "Yunyu Lin",
   "license": "MIT",
   "dependencies": {
+    "@types/classnames": "^2.2.10",
     "@types/mongodb": "^3.3.16",
     "caldera": "0.0.6",
+    "classnames": "^2.2.6",
     "mongodb": "^3.5.3",
     "randomcolor": "^0.5.4",
     "simplytyped": "^3.2.3"

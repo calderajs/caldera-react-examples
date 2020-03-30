@@ -18,7 +18,9 @@ const NavBar = ({
   const history = useHistory();
   const location = useLocation();
   const [query, setQuery] = useState("");
-  const validQuery = query[0] === "@" || query[0] === "#";
+  const validQuery =
+    (query[0] === "@" || query[0] === "#") &&
+    query.slice(1) === query.replace(/\W/g, "");
 
   useEffect(() => {
     const search = new URLSearchParams(location.search);

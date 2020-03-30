@@ -15,17 +15,17 @@ import NewMoo from "./NewMoo";
 import { MooAccount } from "./Account";
 import { MooType, moosResource } from "./Moo";
 
-// Do tag and mention detection with blue highlights
 const Moo = ({ moo }: { moo: MooType }) => {
   const history = useHistory();
   const initial: (string | JSX.Element)[] = [""];
   const tagClick = (tag: string, word: string) => () =>
     history.push(`/search?${tag}=${word}`);
-  const tokenized = moo.text.split(" ").reduce((acc, w) => {
+  const tokenizedMooText = moo.text.split(" ").reduce((acc, w) => {
     if (
       (w[0] === "@" || w[0] === "#") &&
       w.slice(1).startsWith(w.replace(/\W/g, ""))
-    )
+    ) {
+      const index = w.replace(/\W/g, "").length + 1;
       acc.push(
         <span
           onClick={tagClick(
@@ -34,11 +34,11 @@ const Moo = ({ moo }: { moo: MooType }) => {
           )}
           style={{ color: "#54C1FF", cursor: "pointer" }}
         >
-          {w}
+          {w.slice(0, index)}
         </span>,
-        " "
+        `${w.slice(index)} `
       );
-    else acc[acc.length - 1] = acc[acc.length - 1] + w + " ";
+    } else acc[acc.length - 1] = acc[acc.length - 1] + w + " ";
     return acc;
   }, initial);
 
@@ -52,7 +52,7 @@ const Moo = ({ moo }: { moo: MooType }) => {
             <div className="account-id">{`@${moo.account.username}`}</div>
           </div>
         </div>
-        <div className="moo-content">{tokenized}</div>
+        <div className="moo-content">{tokenizedMooText}</div>
       </div>
     </MooBox>
   );

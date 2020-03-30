@@ -143,14 +143,15 @@ const style = css`
     bottom: 0;
     right: 0;
     opacity: 0;
+    width: max-content;
   }
 
-  .account:hover .signout-button {
+  .nav-account-outer:hover .signout-button {
     opacity: 1;
   }
 
-  .account:hover .account-pic,
-  .account:hover .account-name-wrapper {
+  .nav-account-outer:hover .account-pic,
+  .nav-account-outer:hover .account-name-wrapper {
     opacity: 0;
   }
 

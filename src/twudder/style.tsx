@@ -107,6 +107,7 @@ const style = css`
 
   .account {
     display: flex;
+    position: relative;
   }
 
   .account-pic {
@@ -134,6 +135,23 @@ const style = css`
 
   .account-id {
     color: #aaa;
+  }
+
+  .account .signout-button {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    opacity: 0;
+  }
+
+  .account:hover .signout-button {
+    opacity: 1;
+  }
+
+  .account:hover .account-pic,
+  .account:hover .account-name-wrapper {
+    opacity: 0;
   }
 
   .feed-outer {

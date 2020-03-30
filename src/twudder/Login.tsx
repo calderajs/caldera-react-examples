@@ -129,11 +129,9 @@ const Login = ({
               <></>
             )}
             <div className="login-padding" />
-            <input
-              type="submit"
-              value={isLogin ? "Rejoin the Udderverse" : "Join the Udderverse"}
-              className="login-button"
-            ></input>
+            <button type="submit" className="login-button">
+              {isLogin ? "Rejoin the Udderverse" : "Join the Udderverse"}
+            </button>
           </form>
         </div>
       </MooBox>

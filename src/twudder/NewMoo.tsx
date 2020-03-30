@@ -52,12 +52,13 @@ const NewMoo = ({
           </div>
           <div className="new-moo-submit-wrapper">
             <span className="new-moo-char-count"> {value.length}/140 </span>
-            <input
+            <button
               type="submit"
               className="moo-submit"
-              value="Moo"
               {...(value.length >= 140 && { disabled: true })}
-            ></input>
+            >
+              Moo
+            </button>
           </div>
         </form>
       </div>

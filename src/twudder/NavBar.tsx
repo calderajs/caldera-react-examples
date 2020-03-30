@@ -92,22 +92,24 @@ const NavBar = ({
               <div className="account-name">{account.name}</div>
               <div className="account-id">{`@${account.username}`}</div>
             </div>
-            <input
+            <button
               type="button"
-              value="Sign out"
               className="signout-button"
               onClick={() => setAccount(null)}
-            />
+            >
+              Sign out
+            </button>
           </div>
         ) : (
-          <input
+          <button
             type="button"
-            value="Login"
             onClick={e => {
               e.stopPropagation();
               setShowLoginMenu(!showLoginMenu);
             }}
-          />
+          >
+            Log in
+          </button>
         )}
       </div>
     </div>

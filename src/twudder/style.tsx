@@ -189,8 +189,7 @@ const style = css`
     padding: 24px;
   }
 
-  input[type="button"],
-  input[type="submit"] {
+  button {
     border-radius: 4px;
     background: #36a0ec;
     color: #fff;
@@ -204,15 +203,15 @@ const style = css`
     transition: background 0.2s;
   }
 
-  input[type="button"]:hover {
+  button:hover {
     background: #43abf5;
   }
 
-  input[type="button"]:active {
+  button:active {
     background: #2691de;
   }
 
-  input[type="button"]:disabled {
+  button:disabled {
     background: #a0a0a0;
   }
 

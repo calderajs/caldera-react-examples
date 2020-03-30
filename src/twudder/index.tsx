@@ -23,6 +23,7 @@ const Moo = ({ moo }: { moo: MooType }) => {
   const tokenizedMooText = moo.text.split(" ").reduce((acc, w) => {
     if (
       (w[0] === "@" || w[0] === "#") &&
+      w.length > 1 &&
       w.slice(1).startsWith(w.replace(/\W/g, ""))
     ) {
       const index = w.replace(/\W/g, "").length + 1;

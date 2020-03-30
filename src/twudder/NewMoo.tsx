@@ -27,11 +27,11 @@ const NewMoo = ({
                 text: value,
                 tags: value
                   .split(" ")
-                  .filter(w => w[0] === "#")
+                  .filter(w => w[0] === "#" && w.length > 1)
                   .map(w => w.replace(/\W/g, "")),
                 mentions: value
                   .split(" ")
-                  .filter(w => w[0] === "@")
+                  .filter(w => w[0] === "@" && w.length > 1)
                   .map(w => w.replace(/\W/g, ""))
               },
               ...moos

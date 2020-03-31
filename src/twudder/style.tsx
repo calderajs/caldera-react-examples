@@ -12,10 +12,16 @@ const style = css`
   }
 
   body {
-    height: 100%;
     margin: 0;
     font-size: 14px;
     background: #f0f0f0;
+  }
+
+  html,
+  body,
+  #root,
+  #twudder-app {
+    height: 100%;
   }
 
   body,
@@ -56,6 +62,9 @@ const style = css`
     height: 42px;
     border: none;
     font-size: 16px;
+    padding: 0;
+    width: 100%;
+    background: none;
   }
 
   .search {
@@ -73,7 +82,16 @@ const style = css`
     padding: 0 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
     border-radius: 4px;
+    box-sizing: border-box;
     /* border-style: solid; */
+  }
+
+  .input-wrapper.invalid {
+    border: 2px solid red;
+  }
+
+  .input-wrapper.active {
+    border: 2px solid #2691de;
   }
 
   .nav-search::placeholder {
@@ -89,6 +107,7 @@ const style = css`
 
   .account {
     display: flex;
+    position: relative;
   }
 
   .account-pic {
@@ -116,6 +135,24 @@ const style = css`
 
   .account-id {
     color: #aaa;
+  }
+
+  .account .signout-button {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    opacity: 0;
+    width: max-content;
+  }
+
+  .nav-account-outer:hover .signout-button {
+    opacity: 1;
+  }
+
+  .nav-account-outer:hover .account-pic,
+  .nav-account-outer:hover .account-name-wrapper {
+    opacity: 0;
   }
 
   .feed-outer {
@@ -153,8 +190,7 @@ const style = css`
     padding: 24px;
   }
 
-  input[type="button"],
-  input[type="submit"] {
+  button {
     border-radius: 4px;
     background: #36a0ec;
     color: #fff;
@@ -168,15 +204,15 @@ const style = css`
     transition: background 0.2s;
   }
 
-  input[type="button"]:hover {
+  button:hover {
     background: #43abf5;
   }
 
-  input[type="button"]:active {
+  button:active {
     background: #2691de;
   }
 
-  input[type="button"]:disabled {
+  button:disabled {
     background: #a0a0a0;
   }
 

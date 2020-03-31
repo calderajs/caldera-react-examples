@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { renderCalderaApp, useLocation, Head, useSharedState } from "caldera";
+import {
+  renderCalderaApp,
+  useLocation,
+  Head,
+  useSharedState,
+  useHistory
+} from "caldera";
 import style from "./style";
 import NavBar from "./NavBar";
 import AccountPic from "./AccountPic";
@@ -10,6 +16,33 @@ import { MooAccount } from "./Account";
 import { MooType, moosResource } from "./Moo";
 
 const Moo = ({ moo }: { moo: MooType }) => {
+  const history = useHistory();
+  const initial: (string | JSX.Element)[] = [""];
+  const tagClick = (tag: string, word: string) => () =>
+    history.push(`/search?${tag}=${word}`);
+  const tokenizedMooText = moo.text.split(" ").reduce((acc, w) => {
+    if (
+      (w[0] === "@" || w[0] === "#") &&
+      w.length > 1 &&
+      w.slice(1).startsWith(w.replace(/\W/g, ""))
+    ) {
+      const index = w.replace(/\W/g, "").length + 1;
+      acc.push(
+        <span
+          onClick={tagClick(
+            w[0] === "@" ? "mention" : "tags",
+            w.replace(/\W/g, "")
+          )}
+          style={{ color: "#54C1FF", cursor: "pointer" }}
+        >
+          {w.slice(0, index)}
+        </span>,
+        `${w.slice(index)} `
+      );
+    } else acc[acc.length - 1] = acc[acc.length - 1] + w + " ";
+    return acc;
+  }, initial);
+
   return (
     <MooBox>
       <div className="moo">
@@ -20,7 +53,7 @@ const Moo = ({ moo }: { moo: MooType }) => {
             <div className="account-id">{`@${moo.account.username}`}</div>
           </div>
         </div>
-        <div className="moo-content">{moo.text}</div>
+        <div className="moo-content">{tokenizedMooText}</div>
       </div>
     </MooBox>
   );
@@ -34,14 +67,19 @@ const Feed = ({
   filter: string;
 }) => {
   const [moos, setMoos] = useSharedState(moosResource);
-  const params = new URLSearchParams(filter.slice(1));
+  const searchParams = new URLSearchParams(filter.slice(1));
 
-  const filterMoos = ({ account, tags }: MooType) => {
+  const filterMoos = ({ account, tags, mentions }: MooType) => {
     if (filter === "") return true;
-    if (params.has("mention"))
-      return account.username === params.get("mention");
-    const paramTag = params.get("tags");
-    if (paramTag !== null) return tags.includes(`#${paramTag}`);
+    const searchMention = searchParams.get("mention");
+    const searchTag = searchParams.get("tags");
+
+    if (searchMention !== null)
+      return (
+        account.username === searchParams.get("mention") ||
+        mentions.includes(searchMention)
+      );
+    if (searchTag !== null) return tags.includes(searchTag);
     return false;
   };
 
@@ -65,9 +103,9 @@ const App = () => {
   const location = useLocation();
 
   return (
-    <div onClick={() => setShowLoginMenu(false)}>
+    <div id="twudder-app" onClick={() => setShowLoginMenu(false)}>
       <Head>
-        <title>{`Twudder`}</title>
+        <title>Twudder</title>
         <link
           href="https://fonts.googleapis.com/css?family=Roboto&display=swap"
           rel="stylesheet"

@@ -1,7 +1,11 @@
 import { useState } from "react";
+import { useSharedState } from "caldera";
 import React from "react";
 import MooBox from "./MooBox";
-import { accounts, MooAccount } from "./Account";
+import { MooAccount } from "./Account";
+import { makeAccountsResource } from "./twudderResources";
+
+const accountsResource = makeAccountsResource(new Map<string, MooAccount>());
 
 const Login = ({
   setShowLoginMenu,
@@ -10,6 +14,7 @@ const Login = ({
   setShowLoginMenu: React.Dispatch<React.SetStateAction<boolean>>;
   setAccount: React.Dispatch<React.SetStateAction<MooAccount | null>>;
 }) => {
+  const [accounts, addNewAccount] = useSharedState(accountsResource);
   const [isLogin, setIsLogin] = useState(false);
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
@@ -48,7 +53,7 @@ const Login = ({
         password,
         name: name.trim()
       };
-      accounts.set(username, newAccount);
+      addNewAccount(new Map([[username, newAccount]]));
       setAccount(newAccount);
     }
   };

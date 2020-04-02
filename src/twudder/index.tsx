@@ -13,7 +13,10 @@ import MooBox from "./MooBox";
 import Login from "./Login";
 import NewMoo from "./NewMoo";
 import { MooAccount } from "./Account";
-import { MooType, moosResource } from "./Moo";
+import { MooType } from "./Moo";
+import { makeMooResource } from "./twudderResources";
+
+const moosResource = makeMooResource([]);
 
 const Moo = ({ moo }: { moo: MooType }) => {
   const history = useHistory();
@@ -66,7 +69,7 @@ const Feed = ({
   account: MooAccount | null;
   filter: string;
 }) => {
-  const [moos, setMoos] = useSharedState(moosResource);
+  const [moos, addNewMoo] = useSharedState(moosResource);
   const searchParams = new URLSearchParams(filter.slice(1));
 
   const filterMoos = ({ account, tags, mentions }: MooType) => {
@@ -87,7 +90,7 @@ const Feed = ({
     <div className="feed-outer">
       <div className="feed-inner">
         {account ? (
-          <NewMoo setMoos={setMoos} account={account} moos={moos} />
+          <NewMoo addNewMoo={addNewMoo} account={account} moos={moos} />
         ) : null}
         {moos.filter(filterMoos).map(m => (
           <Moo moo={m} />

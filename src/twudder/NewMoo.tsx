@@ -5,11 +5,11 @@ import { MooType } from "./Moo";
 import { MooAccount } from "./Account";
 
 const NewMoo = ({
-  setMoos,
+  addNewMoo,
   moos,
   account
 }: {
-  setMoos: (val: MooType[]) => void;
+  addNewMoo: (val: MooType[]) => void;
   moos: MooType[];
   account: MooAccount;
 }) => {
@@ -22,7 +22,7 @@ const NewMoo = ({
           onSubmit={e => {
             e.preventDefault();
             if (value === "") return;
-            setMoos([
+            addNewMoo([
               {
                 account,
                 text: value,
@@ -34,8 +34,7 @@ const NewMoo = ({
                   .split(" ")
                   .filter(w => w[0] === "@" && w.length > 1)
                   .map(w => w.replace(/\W/g, ""))
-              },
-              ...moos
+              }
             ]);
             setValue("");
           }}

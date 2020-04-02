@@ -1,7 +1,7 @@
 import { MooAccount } from "./Account";
 import { MooType } from "./Moo";
 import { SharedResource } from "caldera";
-import { Client, QueryResult } from "pg";
+import { Client } from "pg";
 
 type Listener = () => void;
 
@@ -90,6 +90,7 @@ const createAccountTrigger = `
   COMMIT;
 `;
 
+// Currently not in use - should run it to clean up database if not wanted
 const cleanupScript = `
   BEGIN;
   DROP TRIGGER IF EXISTS moo_changed ON moos;
@@ -188,7 +189,7 @@ export const makeAccountsResource = (
 };
 
 const setupDatabase = () => {
-  client.connect();
+  client.connect(handleErrorsFor("connect"));
   client.query(createTablesQuery, handleErrorsFor("createTablesQuery"));
 
   client.query(createMooTrigger, handleErrorsFor("createMooTrigger"));

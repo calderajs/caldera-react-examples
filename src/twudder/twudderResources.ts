@@ -2,10 +2,11 @@ import { MooAccount } from "./Account";
 import { MooType } from "./Moo";
 import { SharedResource } from "caldera";
 import { Client } from "pg";
+import { SQL } from "sql-template-strings";
 
 type Listener = () => void;
 
-const createTablesQuery = `
+const createTablesQuery = SQL`
   BEGIN;
 
   CREATE TABLE IF NOT EXISTS accounts (
@@ -22,11 +23,7 @@ const createTablesQuery = `
   COMMIT;
 `;
 
-const addMooQuery = `
-  INSERT INTO moos (username, body, tags, mentions)
-  VALUES ($1, $2, $3, $4);`;
-
-const createMooTrigger = `
+const createMooTrigger = SQL`
   BEGIN;
 
   CREATE OR REPLACE FUNCTION notify_moo ()
@@ -59,15 +56,7 @@ const createMooTrigger = `
   COMMIT;
 `;
 
-const addAccountQuery = `
-  INSERT INTO accounts (username, password, name)
-  VALUES ($1, $2, $3)
-  ON CONFLICT (username) DO UPDATE SET
-    username = EXCLUDED.username,
-    password = EXCLUDED.password,
-    name = EXCLUDED.name`;
-
-const createAccountTrigger = `
+const createAccountTrigger = SQL`
   BEGIN;
 
   CREATE OR REPLACE FUNCTION notify_accounts ()
@@ -90,9 +79,9 @@ const createAccountTrigger = `
   COMMIT;
 `;
 
-const getAccountsQuery = `SELECT row_to_json(accounts)::text FROM accounts`;
+const getAccountsQuery = SQL`SELECT row_to_json(accounts)::text FROM accounts`;
 
-const getMoosQuery = `
+const getMoosQuery = SQL`
   WITH rows AS (
     SELECT 
       row_to_json(a.*) AS account, 
@@ -105,7 +94,7 @@ const getMoosQuery = `
   SELECT row_to_json(rows)::text FROM rows`;
 
 // Currently not in use - should run it to clean up database if not wanted
-const cleanupScript = `
+const cleanupScript = SQL`
   BEGIN;
   DROP TRIGGER IF EXISTS moo_changed ON moos;
   DROP FUNCTION IF EXISTS notify_moo;
@@ -143,7 +132,7 @@ const makeMooResource = (
   let currValue: MooType[] = initialValue;
   const listeners: Set<Listener> = new Set();
 
-  client.query(getMoosQuery, [], (err, result) => {
+  client.query(getMoosQuery, (err, result) => {
     if (err) handleErrorsFor("getMoosQuery")(err);
     currValue = currValue.concat(
       result.rows.map(value => parseMooPayload(value.row_to_json))
@@ -168,8 +157,8 @@ const makeMooResource = (
     updateListeners: (newValue: MooType[]) => {
       newValue.map(newMoo =>
         client.query(
-          addMooQuery,
-          [newMoo.account.username, newMoo.text, newMoo.tags, newMoo.mentions],
+          SQL`INSERT INTO moos (username, body, tags, mentions)
+            VALUES (${newMoo.account.username}, ${newMoo.text}, ${newMoo.tags}, ${newMoo.mentions});`,
           handleErrorsFor("addMooQuery")
         )
       );
@@ -183,7 +172,7 @@ const makeAccountsResource = (
   let currValue: Map<string, MooAccount> = initialValue;
   const listeners: Set<Listener> = new Set();
 
-  client.query(getAccountsQuery, [], (err, result) => {
+  client.query(getAccountsQuery, (err, result) => {
     if (err) handleErrorsFor("getAccountsQuery")(err);
     result.rows.map(value => {
       const account = parseAccountPayload(value.row_to_json);
@@ -210,8 +199,12 @@ const makeAccountsResource = (
     updateListeners: (newValue: Map<string, MooAccount>) => {
       newValue.forEach(value =>
         client.query(
-          addAccountQuery,
-          [value.username, value.password, value.name],
+          SQL`INSERT INTO accounts (username, password, name)
+            VALUES (${value.username}, ${value.password}, ${value.name})
+            ON CONFLICT (username) DO UPDATE SET
+              username = EXCLUDED.username,
+              password = EXCLUDED.password,
+              name = EXCLUDED.name`,
           handleErrorsFor("addAccountQuery")
         )
       );

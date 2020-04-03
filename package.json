@@ -24,7 +24,8 @@
     "mongodb": "^3.5.3",
     "pg": "^8.0.0",
     "randomcolor": "^0.5.4",
-    "simplytyped": "^3.2.3"
+    "simplytyped": "^3.2.3",
+    "sql-template-strings": "^2.2.2"
   },
   "devDependencies": {
     "@types/node": "^13.7.4",

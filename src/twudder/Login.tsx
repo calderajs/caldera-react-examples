@@ -3,9 +3,7 @@ import { useSharedState } from "caldera";
 import React from "react";
 import MooBox from "./MooBox";
 import { MooAccount } from "./Account";
-import { makeAccountsResource } from "./twudderResources";
-
-const accountsResource = makeAccountsResource(new Map<string, MooAccount>());
+import { accountsResource } from "./twudderResources";
 
 const Login = ({
   setShowLoginMenu,

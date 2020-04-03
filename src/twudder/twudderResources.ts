@@ -35,7 +35,7 @@ const createMooTrigger = `
       new_moo   record;
     BEGIN
       SELECT 
-        row_to_json(a.*) AS moo_account, 
+        row_to_json(a.*) AS account, 
         NEW.body, 
         NEW.tags, 
         NEW.mentions
@@ -90,6 +90,20 @@ const createAccountTrigger = `
   COMMIT;
 `;
 
+const getAccountsQuery = `SELECT row_to_json(accounts)::text FROM accounts`;
+
+const getMoosQuery = `
+  WITH rows AS (
+    SELECT 
+      row_to_json(a.*) AS account, 
+      m.body, 
+      m.tags, 
+      m.mentions
+    FROM accounts a JOIN moos m
+    ON a.username = m.username
+  )
+  SELECT row_to_json(rows)::text FROM rows`;
+
 // Currently not in use - should run it to clean up database if not wanted
 const cleanupScript = `
   BEGIN;
@@ -112,7 +126,7 @@ const handleErrorsFor = (caller: string) => (err: Error) => {
 const parseMooPayload = (payload: string): MooType => {
   const parsedPayload = JSON.parse(payload);
   return {
-    account: parsedPayload.moo_account,
+    account: parsedPayload.account,
     text: parsedPayload.body,
     tags: parsedPayload.tags,
     mentions: parsedPayload.mentions
@@ -123,11 +137,19 @@ const parseAccountPayload = (payload: string): MooAccount => {
   return JSON.parse(payload);
 };
 
-export const makeMooResource = (
+const makeMooResource = (
   initialValue: MooType[]
 ): SharedResource<MooType[]> => {
   let currValue: MooType[] = initialValue;
   const listeners: Set<Listener> = new Set();
+
+  client.query(getMoosQuery, [], (err, result) => {
+    if (err) handleErrorsFor("getMoosQuery")(err);
+    currValue = currValue.concat(
+      result.rows.map(value => parseMooPayload(value.row_to_json))
+    );
+    listeners.forEach(listener => listener());
+  });
 
   client.on("notification", msg => {
     if (msg.channel !== "moo") return;
@@ -155,11 +177,20 @@ export const makeMooResource = (
   };
 };
 
-export const makeAccountsResource = (
+const makeAccountsResource = (
   initialValue: Map<string, MooAccount>
 ): SharedResource<Map<string, MooAccount>> => {
   let currValue: Map<string, MooAccount> = initialValue;
   const listeners: Set<Listener> = new Set();
+
+  client.query(getAccountsQuery, [], (err, result) => {
+    if (err) handleErrorsFor("getAccountsQuery")(err);
+    result.rows.map(value => {
+      const account = parseAccountPayload(value.row_to_json);
+      currValue.set(account.username, account);
+    });
+    listeners.forEach(listener => listener());
+  });
 
   client.on("notification", msg => {
     if (msg.channel !== "new_account") return;
@@ -206,3 +237,8 @@ const client = new Client({
   port: 5432
 });
 setupDatabase();
+
+export const moosResource = makeMooResource([]);
+export const accountsResource = makeAccountsResource(
+  new Map<string, MooAccount>()
+);

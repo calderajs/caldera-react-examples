@@ -14,9 +14,7 @@ import Login from "./Login";
 import NewMoo from "./NewMoo";
 import { MooAccount } from "./Account";
 import { MooType } from "./Moo";
-import { makeMooResource } from "./twudderResources";
-
-const moosResource = makeMooResource([]);
+import { moosResource } from "./twudderResources";
 
 const Moo = ({ moo }: { moo: MooType }) => {
   const history = useHistory();
@@ -92,9 +90,12 @@ const Feed = ({
         {account ? (
           <NewMoo addNewMoo={addNewMoo} account={account} moos={moos} />
         ) : null}
-        {moos.filter(filterMoos).map(m => (
-          <Moo moo={m} />
-        ))}
+        {Array.from(moos)
+          .reverse()
+          .filter(filterMoos)
+          .map(m => (
+            <Moo moo={m} />
+          ))}
       </div>
     </div>
   );

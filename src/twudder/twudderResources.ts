@@ -79,20 +79,6 @@ const createAccountTrigger = SQL`
   COMMIT;
 `;
 
-const getAccountsQuery = SQL`SELECT row_to_json(accounts)::text FROM accounts`;
-
-const getMoosQuery = SQL`
-  WITH rows AS (
-    SELECT 
-      row_to_json(a.*) AS account, 
-      m.body, 
-      m.tags, 
-      m.mentions
-    FROM accounts a JOIN moos m
-    ON a.username = m.username
-  )
-  SELECT row_to_json(rows)::text FROM rows`;
-
 // Currently not in use - should run it to clean up database if not wanted
 const cleanupScript = SQL`
   BEGIN;
@@ -132,13 +118,26 @@ const makeMooResource = (
   let currValue: MooType[] = initialValue;
   const listeners: Set<Listener> = new Set();
 
-  client.query(getMoosQuery, (err, result) => {
-    if (err) handleErrorsFor("getMoosQuery")(err);
-    currValue = currValue.concat(
-      result.rows.map(value => parseMooPayload(value.row_to_json))
-    );
-    listeners.forEach(listener => listener());
-  });
+  client.query(
+    SQL`
+      WITH rows AS (
+        SELECT 
+          row_to_json(a.*) AS account, 
+          m.body, 
+          m.tags, 
+          m.mentions
+        FROM accounts a JOIN moos m
+        ON a.username = m.username
+      )
+      SELECT row_to_json(rows)::text FROM rows`,
+    (err, result) => {
+      if (err) handleErrorsFor("getMoosQuery")(err);
+      currValue = currValue.concat(
+        result.rows.map(value => parseMooPayload(value.row_to_json))
+      );
+      listeners.forEach(listener => listener());
+    }
+  );
 
   client.on("notification", msg => {
     if (msg.channel !== "moo") return;
@@ -172,14 +171,17 @@ const makeAccountsResource = (
   let currValue: Map<string, MooAccount> = initialValue;
   const listeners: Set<Listener> = new Set();
 
-  client.query(getAccountsQuery, (err, result) => {
-    if (err) handleErrorsFor("getAccountsQuery")(err);
-    result.rows.map(value => {
-      const account = parseAccountPayload(value.row_to_json);
-      currValue.set(account.username, account);
-    });
-    listeners.forEach(listener => listener());
-  });
+  client.query(
+    SQL`SELECT row_to_json(accounts)::text FROM accounts`,
+    (err, result) => {
+      if (err) handleErrorsFor("getAccountsQuery")(err);
+      result.rows.map(value => {
+        const account = parseAccountPayload(value.row_to_json);
+        currValue.set(account.username, account);
+      });
+      listeners.forEach(listener => listener());
+    }
+  );
 
   client.on("notification", msg => {
     if (msg.channel !== "new_account") return;

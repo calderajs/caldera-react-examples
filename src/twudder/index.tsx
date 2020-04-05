@@ -1,68 +1,16 @@
+import { Head, renderCalderaApp, useLocation, useSharedState } from "caldera";
 import React, { useState } from "react";
-import {
-  renderCalderaApp,
-  useLocation,
-  Head,
-  useSharedState,
-  useHistory
-} from "caldera";
-import style from "./style";
-import NavBar from "./NavBar";
-import AccountPic from "./AccountPic";
-import MooBox from "./MooBox";
-import Login from "./Login";
-import NewMoo from "./NewMoo";
 import { MooAccount } from "./Account";
-import { MooType } from "./Moo";
+import Login from "./Login";
+import { Moo, MooType } from "./Moo";
+import NavBar from "./NavBar";
+import NewMoo from "./NewMoo";
+import style from "./style";
 import { moosResource } from "./twudderResources";
-
-const Moo = ({ moo }: { moo: MooType }) => {
-  const history = useHistory();
-  const initial: (string | JSX.Element)[] = [""];
-  const tagClick = (tag: string, word: string) => () =>
-    history.push(`/search?${tag}=${word}`);
-  const tokenizedMooText = moo.text.split(" ").reduce((acc, w) => {
-    if (
-      (w[0] === "@" || w[0] === "#") &&
-      w.length > 1 &&
-      w.slice(1).startsWith(w.replace(/\W/g, ""))
-    ) {
-      const index = w.replace(/\W/g, "").length + 1;
-      acc.push(
-        <span
-          onClick={tagClick(
-            w[0] === "@" ? "mention" : "tags",
-            w.replace(/\W/g, "")
-          )}
-          style={{ color: "#54C1FF", cursor: "pointer" }}
-        >
-          {w.slice(0, index)}
-        </span>,
-        `${w.slice(index)} `
-      );
-    } else acc[acc.length - 1] = acc[acc.length - 1] + w + " ";
-    return acc;
-  }, initial);
-
-  return (
-    <MooBox>
-      <div className="moo">
-        <div className="account">
-          <AccountPic username={moo.account.username} name={moo.account.name} />
-          <div className="account-name-wrapper">
-            <div className="account-name">{moo.account.name}</div>
-            <div className="account-id">{`@${moo.account.username}`}</div>
-          </div>
-        </div>
-        <div className="moo-content">{tokenizedMooText}</div>
-      </div>
-    </MooBox>
-  );
-};
 
 const Feed = ({
   account,
-  filter
+  filter,
 }: {
   account: MooAccount | null;
   filter: string;
@@ -87,13 +35,13 @@ const Feed = ({
   return (
     <div className="feed-outer">
       <div className="feed-inner">
-        {account ? (
+        {account && (
           <NewMoo addNewMoo={addNewMoo} account={account} moos={moos} />
-        ) : null}
+        )}
         {Array.from(moos)
           .reverse()
           .filter(filterMoos)
-          .map(m => (
+          .map((m) => (
             <Moo moo={m} />
           ))}
       </div>

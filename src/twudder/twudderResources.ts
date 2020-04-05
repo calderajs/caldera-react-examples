@@ -220,8 +220,8 @@ export const setupDatabase = async () => {
   client = new Client({
     user: process.env.PG_USER,
     host: process.env.PG_HOST,
+    port: process.env.PG_PORT ? parseInt(process.env.PG_PORT) : 5432,
     database: process.env.PG_DATABASE ?? "twudder",
-    port: 5432,
   });
 
   await client.connect();

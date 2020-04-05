@@ -14,7 +14,8 @@ const createTablesQuery = SQL`
     password text, 
     name text);
   
-  CREATE TABLE IF NOT EXISTS moos ( 
+  CREATE TABLE IF NOT EXISTS moos (
+    id SERIAL PRIMARY KEY,
     username text references accounts (username), 
     body text, 
     tags text[], 
@@ -32,7 +33,8 @@ const createMooTrigger = SQL`
       new_moo   record;
     BEGIN
       SELECT 
-        row_to_json(a.*) AS account, 
+        NEW.id,
+        row_to_json(a.*) AS account,
         NEW.body, 
         NEW.tags, 
         NEW.mentions
@@ -121,7 +123,8 @@ const makeMooResource = (
   client.query(
     SQL`
       WITH rows AS (
-        SELECT 
+        SELECT
+          m.id,
           row_to_json(a.*) AS account, 
           m.body, 
           m.tags, 

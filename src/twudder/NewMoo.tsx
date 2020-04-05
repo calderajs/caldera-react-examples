@@ -6,11 +6,9 @@ import { MooAccount } from "./Account";
 
 const NewMoo = ({
   addNewMoo,
-  moos,
-  account
+  account,
 }: {
-  addNewMoo: (val: MooType[]) => void;
-  moos: MooType[];
+  addNewMoo: (val: Omit<MooType, "id">[]) => void;
   account: MooAccount;
 }) => {
   const [value, setValue] = useState("");
@@ -19,7 +17,7 @@ const NewMoo = ({
     <MooBox>
       <div className="new-moo-wrapper">
         <form
-          onSubmit={e => {
+          onSubmit={(e) => {
             e.preventDefault();
             if (value === "") return;
             addNewMoo([
@@ -28,13 +26,13 @@ const NewMoo = ({
                 text: value,
                 tags: value
                   .split(" ")
-                  .filter(w => w[0] === "#" && w.length > 1)
-                  .map(w => w.replace(/\W/g, "")),
+                  .filter((w) => w[0] === "#" && w.length > 1)
+                  .map((w) => w.replace(/\W/g, "")),
                 mentions: value
                   .split(" ")
-                  .filter(w => w[0] === "@" && w.length > 1)
-                  .map(w => w.replace(/\W/g, ""))
-              }
+                  .filter((w) => w[0] === "@" && w.length > 1)
+                  .map((w) => w.replace(/\W/g, "")),
+              },
             ]);
             setValue("");
           }}
@@ -43,7 +41,7 @@ const NewMoo = ({
             <AccountPic username={account.username} name={account.name} />
             <textarea
               value={value}
-              onChange={e => setValue(e.target.value)}
+              onChange={(e) => setValue(e.target.value)}
               placeholder="Type your moo here..."
               className="moo-input moo-textarea"
               rows={5}

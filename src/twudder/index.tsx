@@ -10,7 +10,7 @@ import { moosResource } from "./twudderResources";
 
 const Feed = ({
   account,
-  filter,
+  filter
 }: {
   account: MooAccount | null;
   filter: string;
@@ -41,7 +41,7 @@ const Feed = ({
         {Array.from(moos)
           .reverse()
           .filter(filterMoos)
-          .map((m) => (
+          .map(m => (
             <Moo moo={m} />
           ))}
       </div>
@@ -80,4 +80,10 @@ const App = () => {
   );
 };
 
-renderCalderaApp(<App />);
+if (process.env.PORT) {
+  console.log(`Running caldera app with custom port ${process.env.PORT}`);
+  renderCalderaApp(<App />, { port: parseInt(process.env.PORT) });
+} else {
+  console.log(`Running caldera app with default ports and hostname!`);
+  renderCalderaApp(<App />);
+}

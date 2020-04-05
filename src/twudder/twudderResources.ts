@@ -104,7 +104,7 @@ const parseMooPayload = (payload: string): MooType => {
     account: parsedPayload.account,
     text: parsedPayload.body,
     tags: parsedPayload.tags,
-    mentions: parsedPayload.mentions
+    mentions: parsedPayload.mentions,
   };
 };
 
@@ -133,35 +133,35 @@ const makeMooResource = (
     (err, result) => {
       if (err) handleErrorsFor("getMoosQuery")(err);
       currValue = currValue.concat(
-        result.rows.map(value => parseMooPayload(value.row_to_json))
+        result.rows.map((value) => parseMooPayload(value.row_to_json))
       );
-      listeners.forEach(listener => listener());
+      listeners.forEach((listener) => listener());
     }
   );
 
-  client.on("notification", msg => {
+  client.on("notification", (msg) => {
     if (msg.channel !== "moo") return;
     console.log(`Notification on ${msg.channel} with payload ${msg.payload}`);
     const parsedPayload = msg.payload;
     if (parsedPayload) {
       currValue.push(parseMooPayload(parsedPayload));
-      listeners.forEach(listener => listener());
+      listeners.forEach((listener) => listener());
     }
   });
 
   return {
     getValue: () => currValue,
-    addListener: (listener: Listener) => listeners.add(listener),
-    removeListener: (listener: Listener) => listeners.delete(listener),
-    updateListeners: (newValue: MooType[]) => {
-      newValue.map(newMoo =>
+    addListener: (listener) => listeners.add(listener),
+    removeListener: (listener) => listeners.delete(listener),
+    updateListeners: (newValue) => {
+      newValue.map((newMoo) =>
         client.query(
           SQL`INSERT INTO moos (username, body, tags, mentions)
             VALUES (${newMoo.account.username}, ${newMoo.text}, ${newMoo.tags}, ${newMoo.mentions});`,
           handleErrorsFor("addMooQuery")
         )
       );
-    }
+    },
   };
 };
 
@@ -175,31 +175,31 @@ const makeAccountsResource = (
     SQL`SELECT row_to_json(accounts)::text FROM accounts`,
     (err, result) => {
       if (err) handleErrorsFor("getAccountsQuery")(err);
-      result.rows.map(value => {
+      result.rows.map((value) => {
         const account = parseAccountPayload(value.row_to_json);
         currValue.set(account.username, account);
       });
-      listeners.forEach(listener => listener());
+      listeners.forEach((listener) => listener());
     }
   );
 
-  client.on("notification", msg => {
+  client.on("notification", (msg) => {
     if (msg.channel !== "new_account") return;
     console.log(`Notification on ${msg.channel} with payload ${msg.payload}`);
     const payload = msg.payload;
     if (payload) {
       const parsedPayload = parseAccountPayload(payload);
       currValue.set(parsedPayload.username, parsedPayload);
-      listeners.forEach(listener => listener());
+      listeners.forEach((listener) => listener());
     }
   });
 
   return {
     getValue: () => currValue,
-    addListener: (listener: Listener) => listeners.add(listener),
-    removeListener: (listener: Listener) => listeners.delete(listener),
-    updateListeners: (newValue: Map<string, MooAccount>) => {
-      newValue.forEach(value =>
+    addListener: (listener) => listeners.add(listener),
+    removeListener: (listener) => listeners.delete(listener),
+    updateListeners: (newValue) => {
+      newValue.forEach((value) =>
         client.query(
           SQL`INSERT INTO accounts (username, password, name)
             VALUES (${value.username}, ${value.password}, ${value.name})
@@ -210,7 +210,7 @@ const makeAccountsResource = (
           handleErrorsFor("addAccountQuery")
         )
       );
-    }
+    },
   };
 };
 
@@ -229,7 +229,7 @@ const client = new Client({
   user: "twudder-client",
   host: "localhost",
   database: "twudder",
-  port: 5432
+  port: 5432,
 });
 setupDatabase();
 

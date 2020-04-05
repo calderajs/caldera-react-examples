@@ -21,6 +21,7 @@
     "@types/mongodb": "^3.3.16",
     "caldera": "^0.0.7",
     "classnames": "^2.2.6",
+    "dotenv": "^8.2.0",
     "mongodb": "^3.5.3",
     "pg": "^8.0.0",
     "randomcolor": "^0.5.4",

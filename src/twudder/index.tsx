@@ -6,11 +6,14 @@ import { Moo, MooType } from "./Moo";
 import NavBar from "./NavBar";
 import NewMoo from "./NewMoo";
 import style from "./style";
-import { moosResource } from "./twudderResources";
+import { moosResource, setupDatabase } from "./twudderResources";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const Feed = ({
   account,
-  filter
+  filter,
 }: {
   account: MooAccount | null;
   filter: string;
@@ -41,7 +44,7 @@ const Feed = ({
         {Array.from(moos)
           .reverse()
           .filter(filterMoos)
-          .map(m => (
+          .map((m) => (
             <Moo moo={m} />
           ))}
       </div>
@@ -80,10 +83,9 @@ const App = () => {
   );
 };
 
-if (process.env.PORT) {
-  console.log(`Running caldera app with custom port ${process.env.PORT}`);
-  renderCalderaApp(<App />, { port: parseInt(process.env.PORT) });
-} else {
-  console.log(`Running caldera app with default ports and hostname!`);
-  renderCalderaApp(<App />);
-}
+(async () => {
+  await setupDatabase();
+  await renderCalderaApp(<App />, {
+    port: process.env.PORT ? parseInt(process.env.PORT) : 8080,
+  });
+})();

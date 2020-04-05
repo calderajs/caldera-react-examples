@@ -214,24 +214,24 @@ const makeAccountsResource = (
   };
 };
 
-const setupDatabase = () => {
-  client.connect(handleErrorsFor("connect"));
-  client.query(createTablesQuery, handleErrorsFor("createTablesQuery"));
+let client: Client;
 
-  client.query(createMooTrigger, handleErrorsFor("createMooTrigger"));
-  client.query("LISTEN moo", handleErrorsFor("listen for moo"));
+export const setupDatabase = async () => {
+  client = new Client({
+    user: process.env.PG_USER,
+    host: process.env.PG_HOST,
+    database: process.env.PG_DATABASE ?? "twudder",
+    port: 5432,
+  });
 
-  client.query(createAccountTrigger, handleErrorsFor("createAccountTrigger"));
-  client.query("LISTEN new_account", handleErrorsFor("listen for new account"));
+  await client.connect();
+  await client.query(createTablesQuery);
+  await client.query(createMooTrigger);
+  await client.query("LISTEN moo");
+
+  await client.query(createAccountTrigger);
+  await client.query("LISTEN new_account");
 };
-
-const client = new Client({
-  user: "twudder-client",
-  host: "localhost",
-  database: "twudder",
-  port: 5432,
-});
-setupDatabase();
 
 export const moosResource = makeMooResource([]);
 export const accountsResource = makeAccountsResource(

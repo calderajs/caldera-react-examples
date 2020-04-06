@@ -12,7 +12,7 @@
     "start-todo": "node build/todo",
     "start-database": "node build/database",
     "start-routing": "node build/routing",
-    "start-twudder": "node build/twudder"
+    "start-twudder": "node -r dotenv/config build/twudder"
   },
   "author": "Yunyu Lin",
   "license": "MIT",

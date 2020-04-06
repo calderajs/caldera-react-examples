@@ -7,9 +7,6 @@ import NavBar from "./NavBar";
 import NewMoo from "./NewMoo";
 import style from "./style";
 import { moosResource, setupDatabase } from "./twudderResources";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 const Feed = ({
   account,

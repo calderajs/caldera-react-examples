@@ -6,7 +6,7 @@ import MooBox from "./MooBox";
 
 export interface MooType {
   account: MooAccount;
-  text: string;
+  body: string;
   tags: string[];
   mentions: string[];
 }
@@ -18,7 +18,7 @@ export const Moo = ({ moo }: { moo: MooType }) => {
 
   const tokenizedMooText = useMemo(() => {
     const initial: (string | JSX.Element)[] = [""];
-    return moo.text.split(" ").reduce((acc, w) => {
+    return moo.body.split(" ").reduce((acc, w) => {
       if (
         (w[0] === "@" || w[0] === "#") &&
         w.length > 1 &&
@@ -41,7 +41,7 @@ export const Moo = ({ moo }: { moo: MooType }) => {
       } else acc[acc.length - 1] = acc[acc.length - 1] + w + " ";
       return acc;
     }, initial);
-  }, [moo.text]);
+  }, [moo.body]);
 
   return (
     <MooBox>

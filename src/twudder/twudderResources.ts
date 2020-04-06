@@ -227,6 +227,20 @@ export const setupDatabase = async () => {
 };
 
 export const useMoo = () =>
-  useSharedReducer((prevMoos, toInsert) => {
-    return prevMoos;
-  }, moos);
+  useSharedReducer(
+    async (
+      prevMoos,
+      toInsert: { username: string } & Pick<
+        MooType,
+        "body" | "tags" | "mentions"
+      >
+    ) => {
+      const { username, body, tags, mentions } = toInsert;
+      /* const [insertedMoo] = await client.query<MooRow>(
+        sql`INSERT into moos (username, body, tags, mentions)
+            VALUES (${username}, ${body}, ${join(tags)})`
+      );*/
+      return prevMoos;
+    },
+    moos
+  );

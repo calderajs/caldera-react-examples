@@ -198,7 +198,7 @@ export const setupDatabase = async () => {
         sql`
       SELECT
       ${MOO_FIELDS} 
-      ORDER by moos.created_at DESC;
+      ORDER by moos.created_at ASC;
     `
       )
     ).rows.map(rowToMooObject)
@@ -236,11 +236,14 @@ export const useMoo = () =>
       >
     ) => {
       const { username, body, tags, mentions } = toInsert;
-      /* const [insertedMoo] = await client.query<MooRow>(
-        sql`INSERT into moos (username, body, tags, mentions)
-            VALUES (${username}, ${body}, ${join(tags)})`
-      );*/
-      return prevMoos;
+      const [insertedMoo] = (
+        await client.query<MooRow>(
+          sql`INSERT into moos (username, body, tags, mentions)
+            VALUES (${username}, ${body}, ${tags}, ${mentions})
+            RETURNING ${MOO_FIELDS}`
+        )
+      ).rows;
+      return [...prevMoos, rowToMooObject(insertedMoo)];
     },
     moos
   );

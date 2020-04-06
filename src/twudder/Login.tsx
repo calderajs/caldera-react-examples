@@ -3,16 +3,16 @@ import { useSharedState } from "caldera";
 import React from "react";
 import MooBox from "./MooBox";
 import { MooAccount } from "./Account";
-import { accountsResource } from "./twudderResources";
+import { resources } from "./twudderResources";
 
 const Login = ({
   setShowLoginMenu,
-  setAccount
+  setAccount,
 }: {
   setShowLoginMenu: React.Dispatch<React.SetStateAction<boolean>>;
   setAccount: React.Dispatch<React.SetStateAction<MooAccount | null>>;
 }) => {
-  const [accounts, addNewAccount] = useSharedState(accountsResource);
+  const [accounts, addNewAccount] = useSharedState(resources.accounts);
   const [isLogin, setIsLogin] = useState(false);
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
@@ -49,7 +49,7 @@ const Login = ({
       const newAccount = {
         username: username.trim(),
         password,
-        name: name.trim()
+        name: name.trim(),
       };
       addNewAccount(new Map([[username, newAccount]]));
       setAccount(newAccount);
@@ -57,7 +57,7 @@ const Login = ({
   };
 
   return (
-    <div className="login" onClick={e => e.stopPropagation()}>
+    <div className="login" onClick={(e) => e.stopPropagation()}>
       <MooBox>
         <div className="login-inner">
           <div className="toggle-wrapper">
@@ -76,7 +76,7 @@ const Login = ({
             </div>
           </div>
           <form
-            onSubmit={e => {
+            onSubmit={(e) => {
               e.preventDefault();
               onSubmitLoginForm();
             }}
@@ -88,7 +88,7 @@ const Login = ({
                     placeholder="name"
                     className="moo-input"
                     value={name}
-                    onChange={e => setName(e.target.value)}
+                    onChange={(e) => setName(e.target.value)}
                   />
                 </div>
                 <div className="login-padding" />
@@ -102,7 +102,7 @@ const Login = ({
                 placeholder="@username"
                 className="moo-input"
                 value={username}
-                onChange={e => setUsername(e.target.value)}
+                onChange={(e) => setUsername(e.target.value)}
               />
             </div>
             <div className="login-padding" />
@@ -112,7 +112,7 @@ const Login = ({
                 type="password"
                 className="moo-input"
                 value={password}
-                onChange={e => setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
             {!isLogin ? (
@@ -124,7 +124,7 @@ const Login = ({
                     type="password"
                     className="moo-input"
                     value={confPassword}
-                    onChange={e => setConfPassword(e.target.value)}
+                    onChange={(e) => setConfPassword(e.target.value)}
                   />
                 </div>
               </>

@@ -6,7 +6,7 @@ import { Moo, MooType } from "./Moo";
 import NavBar from "./NavBar";
 import NewMoo from "./NewMoo";
 import style from "./style";
-import { moosResource, setupDatabase } from "./twudderResources";
+import { resources, setupDatabase } from "./twudderResources";
 
 const Feed = ({
   account,
@@ -15,7 +15,7 @@ const Feed = ({
   account: MooAccount | null;
   filter: string;
 }) => {
-  const [moos, addNewMoo] = useSharedState(moosResource);
+  const [moos, addNewMoo] = useSharedState(resources.moos);
   const searchParams = new URLSearchParams(filter.slice(1));
 
   const filterMoos = ({ account, tags, mentions }: MooType) => {

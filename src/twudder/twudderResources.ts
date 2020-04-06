@@ -209,6 +209,11 @@ const client = new Client({
   database: process.env.PG_DATABASE ?? "twudder",
 });
 
+export let resources: {
+  moos: ReturnType<typeof makeMooResource>;
+  accounts: ReturnType<typeof makeAccountsResource>;
+};
+
 export const setupDatabase = async () => {
   await client.connect();
   await client.query(createTablesQuery);
@@ -217,9 +222,7 @@ export const setupDatabase = async () => {
 
   await client.query(createAccountTrigger);
   await client.query(sql`LISTEN new_account`);
-};
 
-export const moosResource = makeMooResource([]);
-export const accountsResource = makeAccountsResource(
-  new Map<string, MooAccount>()
-);
+  resources.moos = makeMooResource([]);
+  resources.accounts = makeAccountsResource(new Map<string, MooAccount>());
+};

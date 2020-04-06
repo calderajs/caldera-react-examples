@@ -2,11 +2,11 @@ import { MooAccount } from "./Account";
 import { MooType } from "./Moo";
 import { SharedResource } from "caldera";
 import { Client } from "pg";
-import { SQL } from "sql-template-strings";
+import sql from "sql-template-tag";
 
 type Listener = () => void;
 
-const createTablesQuery = SQL`
+const createTablesQuery = sql`
   BEGIN;
 
   CREATE TABLE IF NOT EXISTS accounts (
@@ -23,7 +23,7 @@ const createTablesQuery = SQL`
   COMMIT;
 `;
 
-const createMooTrigger = SQL`
+const createMooTrigger = sql`
   BEGIN;
 
   CREATE OR REPLACE FUNCTION notify_moo ()
@@ -56,7 +56,7 @@ const createMooTrigger = SQL`
   COMMIT;
 `;
 
-const createAccountTrigger = SQL`
+const createAccountTrigger = sql`
   BEGIN;
 
   CREATE OR REPLACE FUNCTION notify_accounts ()
@@ -76,18 +76,6 @@ const createAccountTrigger = SQL`
   CREATE TRIGGER account_added AFTER INSERT OR UPDATE ON accounts 
   FOR EACH ROW EXECUTE PROCEDURE notify_accounts();
 
-  COMMIT;
-`;
-
-// Currently not in use - should run it to clean up database if not wanted
-const cleanupScript = SQL`
-  BEGIN;
-  DROP TRIGGER IF EXISTS moo_changed ON moos;
-  DROP FUNCTION IF EXISTS notify_moo;
-  DROP TRIGGER IF EXISTS account_added ON accounts;
-  DROP FUNCTION IF EXISTS notify_accounts;
-  DROP TABLE IF EXISTS moos;
-  DROP TABLE IF EXISTS accounts;
   COMMIT;
 `;
 
@@ -119,7 +107,7 @@ const makeMooResource = (
   const listeners: Set<Listener> = new Set();
 
   client.query(
-    SQL`
+    sql`
       WITH rows AS (
         SELECT 
           row_to_json(a.*) AS account, 
@@ -156,7 +144,7 @@ const makeMooResource = (
     updateListeners: (newValue) => {
       newValue.map((newMoo) =>
         client.query(
-          SQL`INSERT INTO moos (username, body, tags, mentions)
+          sql`INSERT INTO moos (username, body, tags, mentions)
             VALUES (${newMoo.account.username}, ${newMoo.text}, ${newMoo.tags}, ${newMoo.mentions});`,
           handleErrorsFor("addMooQuery")
         )
@@ -172,7 +160,7 @@ const makeAccountsResource = (
   const listeners: Set<Listener> = new Set();
 
   client.query(
-    SQL`SELECT row_to_json(accounts)::text FROM accounts`,
+    sql`SELECT row_to_json(accounts)::text FROM accounts`,
     (err, result) => {
       if (err) handleErrorsFor("getAccountsQuery")(err);
       result.rows.map((value) => {
@@ -201,7 +189,7 @@ const makeAccountsResource = (
     updateListeners: (newValue) => {
       newValue.forEach((value) =>
         client.query(
-          SQL`INSERT INTO accounts (username, password, name)
+          sql`INSERT INTO accounts (username, password, name)
             VALUES (${value.username}, ${value.password}, ${value.name})
             ON CONFLICT (username) DO UPDATE SET
               username = EXCLUDED.username,
@@ -227,10 +215,10 @@ export const setupDatabase = async () => {
   await client.connect();
   await client.query(createTablesQuery);
   await client.query(createMooTrigger);
-  await client.query("LISTEN moo");
+  await client.query(sql`LISTEN moo`);
 
   await client.query(createAccountTrigger);
-  await client.query("LISTEN new_account");
+  await client.query(sql`LISTEN new_account`);
 };
 
 export const moosResource = makeMooResource([]);

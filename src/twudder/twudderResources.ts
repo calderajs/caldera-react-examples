@@ -212,7 +212,7 @@ const client = new Client({
 export let resources: {
   moos: ReturnType<typeof makeMooResource>;
   accounts: ReturnType<typeof makeAccountsResource>;
-};
+} = {} as any;
 
 export const setupDatabase = async () => {
   await client.connect();
@@ -223,6 +223,8 @@ export const setupDatabase = async () => {
   await client.query(createAccountTrigger);
   await client.query(sql`LISTEN new_account`);
 
-  resources.moos = makeMooResource([]);
-  resources.accounts = makeAccountsResource(new Map<string, MooAccount>());
+  resources = {
+    moos: makeMooResource([]),
+    accounts: makeAccountsResource(new Map<string, MooAccount>()),
+  };
 };

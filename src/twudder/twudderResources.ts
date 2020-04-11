@@ -36,7 +36,7 @@ const createMooTrigger = sql`
     BEGIN      
       PERFORM pg_notify(
         'moo',
-        NEW.id
+        NEW.id::TEXT
       );
 
       RETURN NEW;

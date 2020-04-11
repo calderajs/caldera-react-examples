@@ -10,6 +10,7 @@ const Login = ({
 }) => {
   const [isLogin, setIsLogin] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string>();
 
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
@@ -18,28 +19,17 @@ const Login = ({
 
   const onSubmitLoginForm = async () => {
     setSubmitting(true);
+    setError(undefined);
 
     if (isLogin) {
-      if (username === "" || password === "") {
-        return;
-      }
       const result = await authenticate(username, password);
       if (result) {
         onAuthenticated(result);
       } else {
         setSubmitting(false);
+        setError("Invalid username or password.");
       }
     } else {
-      if (
-        username === "" ||
-        password === "" ||
-        confPassword === "" ||
-        name === "" ||
-        confPassword !== password
-      ) {
-        return;
-      }
-
       try {
         const acc = {
           username: username.trim(),
@@ -49,9 +39,18 @@ const Login = ({
         onAuthenticated(acc);
       } catch {
         setSubmitting(false);
+        setError("That username is already taken.");
       }
     }
   };
+
+  const isValid = isLogin
+    ? username !== "" && password !== ""
+    : username !== "" &&
+      name !== "" &&
+      password !== "" &&
+      password.length > 6 &&
+      confPassword === password;
 
   return (
     <div className="login" onClick={(e) => e.stopPropagation()}>
@@ -78,7 +77,7 @@ const Login = ({
               onSubmitLoginForm();
             }}
           >
-            {!isLogin ? (
+            {!isLogin && (
               <>
                 <div className="input-wrapper">
                   <input
@@ -90,10 +89,7 @@ const Login = ({
                 </div>
                 <div className="login-padding" />
               </>
-            ) : (
-              <></>
             )}
-
             <div className="input-wrapper">
               <input
                 placeholder="@username"
@@ -112,7 +108,7 @@ const Login = ({
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            {!isLogin ? (
+            {!isLogin && (
               <>
                 <div className="login-padding" />
                 <div className="input-wrapper">
@@ -125,14 +121,12 @@ const Login = ({
                   />
                 </div>
               </>
-            ) : (
-              <></>
             )}
             <div className="login-padding" />
             <button
               type="submit"
               className="login-button"
-              {...(submitting && { disabled: true })}
+              {...((!isValid || submitting) && { disabled: true })}
             >
               {isLogin ? "Rejoin the Udderverse" : "Join the Udderverse"}
             </button>

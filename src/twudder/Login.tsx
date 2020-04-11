@@ -32,7 +32,7 @@ const Login = ({
     } else {
       try {
         const acc = {
-          username: username.trim(),
+          username: username.trim().toLowerCase(),
           name: name.trim(),
         };
         await createAccount(acc, password);
@@ -47,6 +47,7 @@ const Login = ({
   const isValid = isLogin
     ? username !== "" && password !== ""
     : username !== "" &&
+      /^[A-Za-z0-9_\-]+$/.test(username) &&
       name !== "" &&
       password !== "" &&
       password.length > 6 &&

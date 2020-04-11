@@ -3,31 +3,33 @@ import { useSharedState } from "caldera";
 import React from "react";
 import MooBox from "./MooBox";
 import { MooAccount } from "./Account";
-import { resources } from "./twudderResources";
+import { authenticate, createAccount } from "./twudderResources";
 
 const Login = ({
-  setShowLoginMenu,
-  setAccount,
+  onAuthenticated,
 }: {
-  setShowLoginMenu: React.Dispatch<React.SetStateAction<boolean>>;
-  setAccount: React.Dispatch<React.SetStateAction<MooAccount | null>>;
+  onAuthenticated: (account: MooAccount) => void;
 }) => {
-  const [accounts, addNewAccount] = useSharedState(resources.accounts);
   const [isLogin, setIsLogin] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confPassword, setConfPassword] = useState("");
 
-  const onSubmitLoginForm = () => {
+  const onSubmitLoginForm = async () => {
+    setSubmitting(true);
+
     if (isLogin) {
       if (username === "" || password === "") {
         return;
       }
-      const attempt = accounts.get(username);
-      if (attempt) {
-        setAccount(attempt);
-        setShowLoginMenu(false);
+      const result = await authenticate(username, password);
+      if (result) {
+        onAuthenticated(result);
+      } else {
+        setSubmitting(false);
       }
     } else {
       if (
@@ -35,24 +37,21 @@ const Login = ({
         password === "" ||
         confPassword === "" ||
         name === "" ||
-        confPassword !== password ||
-        accounts.has(username)
+        confPassword !== password
       ) {
         return;
       }
 
-      setUsername("");
-      setName("");
-      setPassword("");
-      setConfPassword("");
-      setShowLoginMenu(false);
-      const newAccount = {
-        username: username.trim(),
-        password,
-        name: name.trim(),
-      };
-      addNewAccount(new Map([[username, newAccount]]));
-      setAccount(newAccount);
+      try {
+        const acc = {
+          username: username.trim(),
+          name: name.trim(),
+        };
+        await createAccount(acc, password);
+        onAuthenticated(acc);
+      } catch {
+        setSubmitting(false);
+      }
     }
   };
 
@@ -132,7 +131,11 @@ const Login = ({
               <></>
             )}
             <div className="login-padding" />
-            <button type="submit" className="login-button">
+            <button
+              type="submit"
+              className="login-button"
+              {...(submitting && { disabled: true })}
+            >
               {isLogin ? "Rejoin the Udderverse" : "Join the Udderverse"}
             </button>
           </form>

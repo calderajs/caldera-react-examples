@@ -130,27 +130,23 @@ export const setupDatabase = async () => {
   });
 };
 
-export const useMoo = () =>
-  useSharedReducer(
-    async (
-      prevMoos,
-      toInsert: { username: string } & Pick<
-        MooType,
-        "body" | "tags" | "mentions"
-      >
-    ) => {
-      const { username, body, tags, mentions } = toInsert;
-      const [insertedMoo] = (
-        await client.query<MooRow>(
-          sql`INSERT into moos (username, body, tags, mentions)
+export const useMoos = () =>
+  useSharedReducer(async (prevMoos, toInsert: MooType) => {
+    const {
+      account: { username },
+      body,
+      tags,
+      mentions,
+    } = toInsert;
+    const [insertedMoo] = (
+      await client.query<MooRow>(
+        sql`INSERT into moos (username, body, tags, mentions)
             VALUES (${username}, ${body}, ${tags}, ${mentions})
             RETURNING ${MOO_FIELDS}`
-        )
-      ).rows;
-      return [...prevMoos, rowToMooObject(insertedMoo)];
-    },
-    moos
-  );
+      )
+    ).rows;
+    return [...prevMoos, rowToMooObject(insertedMoo)];
+  }, moos);
 
 export const createAccount = async (details: MooAccount, password: string) => {
   await client.query(
@@ -160,7 +156,7 @@ export const createAccount = async (details: MooAccount, password: string) => {
 };
 
 export const authenticate = async (username: string, password: string) => {
-  const { rows } = await client.query<MooRow>(
+  const { rows } = await client.query<MooAccount>(
     sql`SELECT username, name 
         FROM accounts
         WHERE username = ${username} and pw_hash = crypt(${password}, pw_hash)`

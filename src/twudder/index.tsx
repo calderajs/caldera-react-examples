@@ -6,7 +6,7 @@ import { Moo, MooType } from "./Moo";
 import NavBar from "./NavBar";
 import NewMoo from "./NewMoo";
 import style from "./style";
-import { resources, setupDatabase } from "./twudderResources";
+import { setupDatabase, useMoos } from "./twudderResources";
 
 const Feed = ({
   account,
@@ -15,7 +15,7 @@ const Feed = ({
   account: MooAccount | null;
   filter: string;
 }) => {
-  const [moos, addNewMoo] = useSharedState(resources.moos);
+  const [moos, addNewMoo] = useMoos();
   const searchParams = new URLSearchParams(filter.slice(1));
 
   const filterMoos = ({ account, tags, mentions }: MooType) => {
@@ -70,10 +70,13 @@ const App = () => {
         setShowLoginMenu={setShowLoginMenu}
         showLoginMenu={showLoginMenu}
       />
-      {showLoginMenu ? (
-        <Login setShowLoginMenu={setShowLoginMenu} setAccount={setAccount} />
-      ) : (
-        <></>
+      {showLoginMenu && (
+        <Login
+          onAuthenticated={(acc) => {
+            setAccount(acc);
+            setShowLoginMenu(false);
+          }}
+        />
       )}
       <Feed account={account} filter={location.search} />
     </div>

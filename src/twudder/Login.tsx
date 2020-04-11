@@ -94,7 +94,7 @@ const Login = ({
             )}
             <div className="input-wrapper">
               <input
-                placeholder="@username"
+                placeholder="username"
                 className="moo-input"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}

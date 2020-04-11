@@ -8,11 +8,10 @@ const createTablesQuery = sql`
   BEGIN;
 
   CREATE TABLE IF NOT EXISTS accounts (
-    username text PRIMARY KEY, 
-    password text, 
-    salt text,
+    username text PRIMARY KEY,
     name text,
-    created_at text DEFAULT now()
+    pw_hash text, 
+    created_at timestamp DEFAULT now()
   );
   
   CREATE TABLE IF NOT EXISTS moos ( 
@@ -152,3 +151,28 @@ export const useMoo = () =>
     },
     moos
   );
+
+export const createAccount = async (details: MooAccount, password: string) => {
+  await client.query(
+    sql`INSERT INTO accounts (username, name, pw_hash) 
+        VALUES (${details.username}, ${details.name}, crypt(${password}, gen_salt('md5')))`
+  );
+};
+
+export const authenticate = async (username: string, password: string) => {
+  const { rows } = await client.query<MooRow>(
+    sql`SELECT username, name 
+        FROM accounts
+        WHERE username = ${username} and pw_hash = crypt(${password}, pw_hash)`
+  );
+  return rows.length === 1 ? rows[0] : undefined;
+};
+
+export const doesUsernameExist = async (username: string) => {
+  const [res] = (
+    await client.query<{ exists: boolean }>(
+      sql`SELECT EXISTS (SELECT 1 FROM accounts WHERE username = ${username})`
+    )
+  ).rows;
+  return res.exists;
+};

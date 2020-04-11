@@ -8,31 +8,35 @@ const NewMoo = ({
   addNewMoo,
   account,
 }: {
-  addNewMoo: (val: Omit<MooType, "id">) => void;
+  addNewMoo: (val: Omit<MooType, "id">) => Promise<void>;
   account: MooAccount;
 }) => {
   const [value, setValue] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   return (
     <MooBox>
       <div className="new-moo-wrapper">
         <form
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             e.preventDefault();
-            if (value === "") return;
-            addNewMoo({
-              account,
-              body: value,
-              tags: value
-                .split(" ")
-                .filter((w) => w[0] === "#" && w.length > 1)
-                .map((w) => w.replace(/\W/g, "")),
-              mentions: value
-                .split(" ")
-                .filter((w) => w[0] === "@" && w.length > 1)
-                .map((w) => w.replace(/\W/g, "")),
-            });
-            setValue("");
+            if (value.trim() !== "") {
+              setValue("");
+              setSubmitting(true);
+              await addNewMoo({
+                account,
+                body: value,
+                tags: value
+                  .split(" ")
+                  .filter((w) => w[0] === "#" && w.length > 1)
+                  .map((w) => w.replace(/\W/g, "")),
+                mentions: value
+                  .split(" ")
+                  .filter((w) => w[0] === "@" && w.length > 1)
+                  .map((w) => w.replace(/\W/g, "")),
+              });
+              setSubmitting(false);
+            }
           }}
         >
           <div className="new-moo-input-wrapper">
@@ -51,7 +55,7 @@ const NewMoo = ({
             <button
               type="submit"
               className="moo-submit"
-              {...(value.length >= 140 && { disabled: true })}
+              {...((value.length >= 140 || submitting) && { disabled: true })}
             >
               Moo
             </button>

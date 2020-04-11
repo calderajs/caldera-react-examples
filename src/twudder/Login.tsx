@@ -51,6 +51,7 @@ const Login = ({
       name !== "" &&
       password !== "" &&
       password.length > 6 &&
+      name.length <= 32 &&
       confPassword === password;
 
   return (

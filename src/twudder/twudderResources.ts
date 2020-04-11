@@ -52,14 +52,12 @@ const createMooTrigger = sql`
 `;
 
 const MOO_FIELDS = sql`
-    moos.id,
-    moos.body,
-    moos.tags,
-    moos.mentions,
+    id,
+    body,
+    tags,
+    mentions,
     accounts.username as account_username,
     accounts.name as account_name
-  FROM moos
-  JOIN accounts ON accounts.username = moos.username
 `;
 
 type MooRow = {
@@ -106,11 +104,9 @@ export const setupDatabase = async () => {
   moos = makeSharedResource(
     (
       await client.query<MooRow>(
-        sql`
-      SELECT
-      ${MOO_FIELDS} 
-      ORDER by moos.created_at ASC;
-    `
+        sql`SELECT ${MOO_FIELDS} FROM moos
+            JOIN accounts ON accounts.username = moos.username
+            ORDER by moos.created_at ASC`
       )
     ).rows.map(rowToMooObject)
   );
@@ -124,7 +120,9 @@ export const setupDatabase = async () => {
     if (payload) {
       const [insertedMoo] = (
         await client.query<MooRow>(
-          sql`SELECT ${MOO_FIELDS} WHERE id = ${parseInt(payload)}`
+          sql`SELECT ${MOO_FIELDS} FROM moos
+              JOIN accounts ON accounts.username = moos.username
+              WHERE id = ${parseInt(payload)}`
         )
       ).rows;
       const currentValue = moos.getValue();
@@ -141,17 +139,18 @@ export const useMoos = () =>
       tags,
       mentions,
     } = toInsert;
-    const [insertedMoo] = (
+    const rows = (
       await client.query<MooRow>(
         sql`WITH new_moo as (
               INSERT into moos (username, body, tags, mentions)
               VALUES (${username}, ${body}, ${tags}, ${mentions})
-              RETURNING id
+              RETURNING *
             )
-            SELECT ${MOO_FIELDS} INNER JOIN new_moo ON new_moo.id = moos.id`
+            SELECT ${MOO_FIELDS} FROM new_moo
+            JOIN accounts ON accounts.username = new_moo.username`
       )
     ).rows;
-    return [...prevMoos, rowToMooObject(insertedMoo)];
+    return [...prevMoos, ...rows.map(rowToMooObject)];
   }, moos);
 
 export const createAccount = async (details: MooAccount, password: string) => {

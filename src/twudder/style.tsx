@@ -266,6 +266,11 @@ const style = css`
   .login-button {
     width: 100%;
   }
+
+  .error {
+    font-size: 10px;
+    color: red;
+  }
 `;
 
 export default style;

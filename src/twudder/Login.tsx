@@ -122,6 +122,12 @@ const Login = ({
                 </div>
               </>
             )}
+            {error && (
+              <>
+                <div className="login-padding" />
+                <div className="error">{error}</div>
+              </>
+            )}
             <div className="login-padding" />
             <button
               type="submit"

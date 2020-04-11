@@ -21,7 +21,7 @@ const style = css`
   body,
   #root,
   #twudder-app {
-    height: 100%;
+    min-height: 100%;
   }
 
   body,
@@ -39,6 +39,7 @@ const style = css`
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
     position: sticky;
     top: 0;
+    z-index: 9999;
   }
 
   .nav-account-outer {
@@ -231,6 +232,7 @@ const style = css`
     position: absolute;
     right: 16px;
     width: 300px;
+    z-index: 9999;
   }
 
   .login-inner {

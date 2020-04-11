@@ -97,8 +97,10 @@ export const setupDatabase = async () => {
   await client.query(createMooTrigger);
   await client.query(sql`LISTEN moo`);
 
-  const [{ pg_backend_id: sessionPID }] = (
-    await client.query<{ pg_backend_id: number }>(sql`select pg_backend_pid()`)
+  const [{ process_id: sessionPID }] = (
+    await client.query<{ process_id: number }>(
+      sql`select pg_backend_pid() as process_id`
+    )
   ).rows;
 
   moos = makeSharedResource(

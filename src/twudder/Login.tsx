@@ -101,7 +101,7 @@ const Login = ({
             <div className="login-padding" />
             <div className="input-wrapper">
               <input
-                placeholder="password"
+                placeholder="password (min 6 chars)"
                 type="password"
                 className="moo-input"
                 value={password}

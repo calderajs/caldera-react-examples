@@ -1,8 +1,6 @@
-import { useState } from "react";
-import { useSharedState } from "caldera";
-import React from "react";
-import MooBox from "./MooBox";
+import React, { useState } from "react";
 import { MooAccount } from "./Account";
+import MooBox from "./MooBox";
 import { authenticate, createAccount } from "./twudderResources";
 
 const Login = ({

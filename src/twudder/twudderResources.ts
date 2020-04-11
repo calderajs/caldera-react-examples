@@ -54,8 +54,8 @@ const MOO_FIELDS = sql`
     body,
     tags,
     mentions,
-    username as account_username,
-    name as account_name
+    accounts.username as account_username,
+    accounts.name as account_name
   FROM moos
   JOIN accounts ON accounts.username = moos.username
 `;

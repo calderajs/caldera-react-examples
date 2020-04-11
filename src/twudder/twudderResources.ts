@@ -7,6 +7,8 @@ import sql from "sql-template-tag";
 const createTablesQuery = sql`
   BEGIN;
 
+  CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
   CREATE TABLE IF NOT EXISTS accounts (
     username text PRIMARY KEY,
     name text,
@@ -152,7 +154,7 @@ export const useMoos = () =>
 export const createAccount = async (details: MooAccount, password: string) => {
   await client.query(
     sql`INSERT INTO accounts (username, name, pw_hash) 
-        VALUES (${details.username}, ${details.name}, crypt(${password}, gen_salt('md5')))`
+        VALUES (${details.username}, ${details.name}, crypt(${password}, gen_salt('bf')))`
   );
 };
 

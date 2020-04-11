@@ -268,7 +268,7 @@ const style = css`
   }
 
   .error {
-    font-size: 10px;
+    font-size: 12px;
     color: red;
   }
 `;

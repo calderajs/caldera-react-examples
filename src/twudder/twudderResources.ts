@@ -52,10 +52,10 @@ const createMooTrigger = sql`
 `;
 
 const MOO_FIELDS = sql`
-    id,
-    body,
-    tags,
-    mentions,
+    moos.id,
+    moos.body,
+    moos.tags,
+    moos.mentions,
     accounts.username as account_username,
     accounts.name as account_name
   FROM moos
@@ -143,9 +143,12 @@ export const useMoos = () =>
     } = toInsert;
     const [insertedMoo] = (
       await client.query<MooRow>(
-        sql`INSERT into moos (username, body, tags, mentions)
-            VALUES (${username}, ${body}, ${tags}, ${mentions})
-            RETURNING ${MOO_FIELDS}`
+        sql`WITH new_moo as (
+              INSERT into moos (username, body, tags, mentions)
+              VALUES (${username}, ${body}, ${tags}, ${mentions})
+              RETURNING id
+            )
+            SELECT ${MOO_FIELDS} INNER JOIN new_moo ON new_moo.id = moos.id`
       )
     ).rows;
     return [...prevMoos, rowToMooObject(insertedMoo)];

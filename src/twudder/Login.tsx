@@ -61,14 +61,20 @@ const Login = ({
           <div className="toggle-wrapper">
             <div
               className={`toggle ${isLogin ? "" : "active"}`}
-              onClick={() => setIsLogin(false)}
+              onClick={() => {
+                setIsLogin(false);
+                setError(undefined);
+              }}
             >
               Sign up
             </div>
             <div className="spacer"></div>
             <div
               className={`toggle ${isLogin ? "active" : ""}`}
-              onClick={() => setIsLogin(true)}
+              onClick={() => {
+                setIsLogin(true);
+                setError(undefined);
+              }}
             >
               Log in
             </div>

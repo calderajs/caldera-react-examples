@@ -4,8 +4,6 @@ import { SharedResource, makeSharedResource, useSharedReducer } from "caldera";
 import { Client } from "pg";
 import sql from "sql-template-tag";
 
-type Listener = VoidFunction;
-
 const createTablesQuery = sql`
   BEGIN;
 
@@ -52,36 +50,6 @@ const createMooTrigger = sql`
   COMMIT;
 `;
 
-const createAccountTrigger = sql`
-  BEGIN;
-
-  CREATE OR REPLACE FUNCTION notify_accounts ()
-  RETURNS trigger AS $$
-    BEGIN
-      PERFORM pg_notify(
-        'new_account',
-        row_to_json(NEW)::text
-      );
-
-      RETURN NEW;
-    END;
-  $$ LANGUAGE plpgsql;
-
-  DROP TRIGGER IF EXISTS account_added ON accounts;
-
-  CREATE TRIGGER account_added AFTER INSERT OR UPDATE ON accounts 
-  FOR EACH ROW EXECUTE PROCEDURE notify_accounts();
-
-  COMMIT;
-`;
-
-const handleErrorsFor = (caller: string) => (err: Error) => {
-  if (err) {
-    console.log(`ERROR: on ${caller}`);
-    throw err;
-  }
-};
-
 const MOO_FIELDS = sql`
     id,
     body,
@@ -108,62 +76,9 @@ const rowToMooObject = (row: MooRow): MooType => {
       username: row.account_username,
       name: row.account_name,
     },
-    text: row.body,
+    body: row.body,
     tags: row.tags,
     mentions: row.mentions,
-  };
-};
-
-const parseAccountPayload = (payload: string): MooAccount => {
-  return JSON.parse(payload);
-};
-
-const makeAccountsResource = (
-  initialValue: Map<string, MooAccount>
-): SharedResource<Map<string, MooAccount>> => {
-  let currValue: Map<string, MooAccount> = initialValue;
-  const listeners: Set<Listener> = new Set();
-
-  client.query(
-    sql`SELECT row_to_json(accounts)::text FROM accounts`,
-    (err, result) => {
-      if (err) handleErrorsFor("getAccountsQuery")(err);
-      result.rows.map((value) => {
-        const account = parseAccountPayload(value.row_to_json);
-        currValue.set(account.username, account);
-      });
-      listeners.forEach((listener) => listener());
-    }
-  );
-
-  client.on("notification", (msg) => {
-    if (msg.channel !== "new_account") return;
-    console.log(`Notification on ${msg.channel} with payload ${msg.payload}`);
-    const payload = msg.payload;
-    if (payload) {
-      const parsedPayload = parseAccountPayload(payload);
-      currValue.set(parsedPayload.username, parsedPayload);
-      listeners.forEach((listener) => listener());
-    }
-  });
-
-  return {
-    getValue: () => currValue,
-    addListener: (listener) => listeners.add(listener),
-    removeListener: (listener) => listeners.delete(listener),
-    updateListeners: (newValue) => {
-      newValue.forEach((value) =>
-        client.query(
-          sql`INSERT INTO accounts (username, password, name)
-            VALUES (${value.username}, ${value.password}, ${value.name})
-            ON CONFLICT (username) DO UPDATE SET
-              username = EXCLUDED.username,
-              password = EXCLUDED.password,
-              name = EXCLUDED.name`,
-          handleErrorsFor("addAccountQuery")
-        )
-      );
-    },
   };
 };
 
@@ -175,18 +90,12 @@ const client = new Client({
 });
 
 let moos: SharedResource<MooType[]>;
-let resources: {
-  accounts: ReturnType<typeof makeAccountsResource>;
-} = {} as any;
 
 export const setupDatabase = async () => {
   await client.connect();
   await client.query(createTablesQuery);
   await client.query(createMooTrigger);
   await client.query(sql`LISTEN moo`);
-
-  await client.query(createAccountTrigger);
-  await client.query(sql`LISTEN new_account`);
 
   const [{ pg_backend_id: sessionPID }] = (
     await client.query<{ pg_backend_id: number }>(sql`select pg_backend_pid()`)
@@ -220,10 +129,6 @@ export const setupDatabase = async () => {
       moos.updateListeners([...currentValue, rowToMooObject(insertedMoo)]);
     }
   });
-
-  resources = {
-    accounts: makeAccountsResource(new Map<string, MooAccount>()),
-  };
 };
 
 export const useMoo = () =>

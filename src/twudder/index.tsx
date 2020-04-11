@@ -35,14 +35,12 @@ const Feed = ({
   return (
     <div className="feed-outer">
       <div className="feed-inner">
-        {account && (
-          <NewMoo addNewMoo={addNewMoo} account={account} moos={moos} />
-        )}
+        {account && <NewMoo addNewMoo={addNewMoo} account={account} />}
         {Array.from(moos)
           .reverse()
           .filter(filterMoos)
           .map((m) => (
-            <Moo moo={m} />
+            <Moo moo={m} key={m.id} />
           ))}
       </div>
     </div>

@@ -5,6 +5,7 @@ import AccountPic from "./AccountPic";
 import MooBox from "./MooBox";
 
 export interface MooType {
+  id: number;
   account: MooAccount;
   body: string;
   tags: string[];

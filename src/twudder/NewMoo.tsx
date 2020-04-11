@@ -6,11 +6,9 @@ import { MooAccount } from "./Account";
 
 const NewMoo = ({
   addNewMoo,
-  moos,
   account,
 }: {
-  addNewMoo: (val: MooType) => void;
-  moos: MooType[];
+  addNewMoo: (val: Omit<MooType, "id">) => void;
   account: MooAccount;
 }) => {
   const [value, setValue] = useState("");

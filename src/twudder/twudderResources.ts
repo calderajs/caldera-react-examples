@@ -71,6 +71,7 @@ type MooRow = {
 
 const rowToMooObject = (row: MooRow): MooType => {
   return {
+    id: row.id,
     account: {
       username: row.account_username,
       name: row.account_name,
@@ -131,7 +132,7 @@ export const setupDatabase = async () => {
 };
 
 export const useMoos = () =>
-  useSharedReducer(async (prevMoos, toInsert: MooType) => {
+  useSharedReducer(async (prevMoos, toInsert: Omit<MooType, "id">) => {
     const {
       account: { username },
       body,

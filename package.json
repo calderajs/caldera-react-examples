@@ -12,7 +12,7 @@
     "start-todo": "node build/todo",
     "start-database": "node build/database",
     "start-routing": "node build/routing",
-    "start-twudder": "node build/twudder"
+    "start-twudder": "node -r dotenv/config build/twudder"
   },
   "author": "Yunyu Lin",
   "license": "MIT",
@@ -21,12 +21,16 @@
     "@types/mongodb": "^3.3.16",
     "caldera": "^0.0.7",
     "classnames": "^2.2.6",
+    "dotenv": "^8.2.0",
     "mongodb": "^3.5.3",
+    "pg": "^8.0.0",
     "randomcolor": "^0.5.4",
-    "simplytyped": "^3.2.3"
+    "simplytyped": "^3.2.3",
+    "sql-template-tag": "^3.3.0"
   },
   "devDependencies": {
     "@types/node": "^13.7.4",
+    "@types/pg": "^7.14.3",
     "@types/randomcolor": "^0.5.3",
     "@types/react": "^16.9.22",
     "typescript": "^3.8.2"

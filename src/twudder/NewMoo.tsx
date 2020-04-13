@@ -5,46 +5,45 @@ import { MooType } from "./Moo";
 import { MooAccount } from "./Account";
 
 const NewMoo = ({
-  setMoos,
-  moos,
-  account
+  addNewMoo,
+  account,
 }: {
-  setMoos: (val: MooType[]) => void;
-  moos: MooType[];
+  addNewMoo: (val: Omit<MooType, "id">) => Promise<void>;
   account: MooAccount;
 }) => {
   const [value, setValue] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   return (
     <MooBox>
       <div className="new-moo-wrapper">
         <form
-          onSubmit={e => {
+          onSubmit={async (e) => {
             e.preventDefault();
-            if (value === "") return;
-            setMoos([
-              {
+            if (value.trim() !== "") {
+              setValue("");
+              setSubmitting(true);
+              await addNewMoo({
                 account,
-                text: value,
+                body: value,
                 tags: value
                   .split(" ")
-                  .filter(w => w[0] === "#" && w.length > 1)
-                  .map(w => w.replace(/\W/g, "")),
+                  .filter((w) => w[0] === "#" && w.length > 1)
+                  .map((w) => w.replace(/\W/g, "")),
                 mentions: value
                   .split(" ")
-                  .filter(w => w[0] === "@" && w.length > 1)
-                  .map(w => w.replace(/\W/g, ""))
-              },
-              ...moos
-            ]);
-            setValue("");
+                  .filter((w) => w[0] === "@" && w.length > 1)
+                  .map((w) => w.replace(/\W/g, "")),
+              });
+              setSubmitting(false);
+            }
           }}
         >
           <div className="new-moo-input-wrapper">
             <AccountPic username={account.username} name={account.name} />
             <textarea
               value={value}
-              onChange={e => setValue(e.target.value)}
+              onChange={(e) => setValue(e.target.value)}
               placeholder="Type your moo here..."
               className="moo-input moo-textarea"
               rows={5}
@@ -56,7 +55,7 @@ const NewMoo = ({
             <button
               type="submit"
               className="moo-submit"
-              {...(value.length >= 140 && { disabled: true })}
+              {...((value.length >= 140 || submitting) && { disabled: true })}
             >
               Moo
             </button>

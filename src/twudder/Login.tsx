@@ -1,118 +1,122 @@
-import { useState } from "react";
-import React from "react";
+import React, { useState } from "react";
+import { MooAccount } from "./Account";
 import MooBox from "./MooBox";
-import { accounts, MooAccount } from "./Account";
+import { authenticate, createAccount } from "./twudderResources";
 
 const Login = ({
-  setShowLoginMenu,
-  setAccount
+  onAuthenticated,
 }: {
-  setShowLoginMenu: React.Dispatch<React.SetStateAction<boolean>>;
-  setAccount: React.Dispatch<React.SetStateAction<MooAccount | null>>;
+  onAuthenticated: (account: MooAccount) => void;
 }) => {
   const [isLogin, setIsLogin] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string>();
+
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confPassword, setConfPassword] = useState("");
 
-  const onSubmitLoginForm = () => {
+  const onSubmitLoginForm = async () => {
+    setSubmitting(true);
+    setError(undefined);
+
     if (isLogin) {
-      if (username === "" || password === "") {
-        return;
-      }
-      const attempt = accounts.get(username);
-      if (attempt) {
-        setAccount(attempt);
-        setShowLoginMenu(false);
+      const result = await authenticate(username, password);
+      if (result) {
+        onAuthenticated(result);
+      } else {
+        setSubmitting(false);
+        setError("Invalid username or password.");
       }
     } else {
-      if (
-        username === "" ||
-        password === "" ||
-        confPassword === "" ||
-        name === "" ||
-        confPassword !== password ||
-        accounts.has(username)
-      ) {
-        return;
+      try {
+        const acc = {
+          username: username.trim().toLowerCase(),
+          name: name.trim(),
+        };
+        await createAccount(acc, password);
+        onAuthenticated(acc);
+      } catch {
+        setSubmitting(false);
+        setError("That username is already taken.");
       }
-
-      setUsername("");
-      setName("");
-      setPassword("");
-      setConfPassword("");
-      setShowLoginMenu(false);
-      const newAccount = {
-        username: username.trim(),
-        password,
-        name: name.trim()
-      };
-      accounts.set(username, newAccount);
-      setAccount(newAccount);
     }
   };
 
+  const isValid = isLogin
+    ? username !== "" && password !== ""
+    : username !== "" &&
+      /^[A-Za-z0-9_\-]+$/.test(username) &&
+      name !== "" &&
+      password !== "" &&
+      password.length > 6 &&
+      name.length <= 32 &&
+      confPassword === password;
+
   return (
-    <div className="login" onClick={e => e.stopPropagation()}>
+    <div className="login" onClick={(e) => e.stopPropagation()}>
       <MooBox>
         <div className="login-inner">
           <div className="toggle-wrapper">
             <div
               className={`toggle ${isLogin ? "" : "active"}`}
-              onClick={() => setIsLogin(false)}
+              onClick={() => {
+                setIsLogin(false);
+                setError(undefined);
+              }}
             >
               Sign up
             </div>
             <div className="spacer"></div>
             <div
               className={`toggle ${isLogin ? "active" : ""}`}
-              onClick={() => setIsLogin(true)}
+              onClick={() => {
+                setIsLogin(true);
+                setError(undefined);
+              }}
             >
               Log in
             </div>
           </div>
           <form
-            onSubmit={e => {
+            onSubmit={(e) => {
               e.preventDefault();
               onSubmitLoginForm();
             }}
           >
-            {!isLogin ? (
+            {!isLogin && (
               <>
                 <div className="input-wrapper">
                   <input
                     placeholder="name"
                     className="moo-input"
                     value={name}
-                    onChange={e => setName(e.target.value)}
+                    onChange={(e) => setName(e.target.value)}
                   />
                 </div>
                 <div className="login-padding" />
               </>
-            ) : (
-              <></>
             )}
-
             <div className="input-wrapper">
               <input
-                placeholder="@username"
+                placeholder="username"
                 className="moo-input"
                 value={username}
-                onChange={e => setUsername(e.target.value)}
+                onChange={(e) => setUsername(e.target.value)}
               />
             </div>
             <div className="login-padding" />
             <div className="input-wrapper">
               <input
-                placeholder="password"
+                placeholder={`password ${!isLogin ? "(min 6 chars)" : ""}`}
                 type="password"
                 className="moo-input"
                 value={password}
-                onChange={e => setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            {!isLogin ? (
+            {!isLogin && (
               <>
                 <div className="login-padding" />
                 <div className="input-wrapper">
@@ -121,15 +125,23 @@ const Login = ({
                     type="password"
                     className="moo-input"
                     value={confPassword}
-                    onChange={e => setConfPassword(e.target.value)}
+                    onChange={(e) => setConfPassword(e.target.value)}
                   />
                 </div>
               </>
-            ) : (
-              <></>
+            )}
+            {error && (
+              <>
+                <div className="login-padding" />
+                <div className="error">{error}</div>
+              </>
             )}
             <div className="login-padding" />
-            <button type="submit" className="login-button">
+            <button
+              type="submit"
+              className="login-button"
+              {...((!isValid || submitting) && { disabled: true })}
+            >
               {isLogin ? "Rejoin the Udderverse" : "Join the Udderverse"}
             </button>
           </form>
@@ -138,4 +150,5 @@ const Login = ({
     </div>
   );
 };
+
 export default Login;
